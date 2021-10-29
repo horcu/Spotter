@@ -6,10 +6,10 @@ import 'package:spotter/services/session_svc.dart';
 import 'categories.dart';
 
 class TodaysWorkout extends StatefulWidget {
-  Part part;
+  List<Part> parts;
   SessionSvc svc;
 
-   TodaysWorkout({required this.part, required this.svc});
+   TodaysWorkout({required this.parts, required this.svc});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -34,60 +34,27 @@ class _TodaysWorkoutState extends State<TodaysWorkout> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    var title = '';
+    widget.parts.forEach((p) {
+      title = title + ', ' +  p.name;
+    });
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.part.name),
+        title: Text(title),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
+
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[ //
             const Align(
               alignment: Alignment.bottomLeft,
               child:  Text("Select from list below"),
             ),// use a list instead
-            const Align(
-              alignment: Alignment.bottomLeft,
-              child:  Text("Pec Fly"),
-            ),
-        const Align(
-          alignment: Alignment.bottomLeft,
-          child:  Text("Dumbell press")),
-
-        const Align(
-          alignment: Alignment.bottomLeft,
-          child:  Text("Barbell press")),
-
-        const Align(
-          alignment: Alignment.bottomLeft,
-          child:  Text("Pushups")),
-
-        const Align(
-          alignment: Alignment.bottomLeft,
-          child:   Text("Dips")),
-
-        const Align(
-          alignment: Alignment.bottomLeft,
-          child:   Text("Military Press")),
-
             Column(
               children: [
                 Row(
@@ -98,7 +65,7 @@ class _TodaysWorkoutState extends State<TodaysWorkout> {
 
                 Row(
                   children: [
-                    Spacer(
+                    const Spacer(
                       flex: 1,
                     ),
                     ElevatedButton(
@@ -117,7 +84,7 @@ class _TodaysWorkoutState extends State<TodaysWorkout> {
                       ),
                     ),
                     ),
-                    Spacer(
+                    const Spacer(
                       flex: 1,
                     ),
                     ElevatedButton(
@@ -128,7 +95,7 @@ class _TodaysWorkoutState extends State<TodaysWorkout> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Workout
-                          (widget.part.name, widget.svc)),
+                          (widget.parts, title, widget.svc)),
                       );
                     }, child: const Text(
                       "Get Started",
@@ -136,10 +103,10 @@ class _TodaysWorkoutState extends State<TodaysWorkout> {
                       ),
                     ),
                     ),
-                    Spacer(
+                    const Spacer(
                       flex: 1,
                     ),
-                    Spacer(
+                    const Spacer(
                       flex: 1,
                     ),
                   ],

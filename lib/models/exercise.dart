@@ -1,47 +1,29 @@
 
 import 'package:hive/hive.dart';
-import 'package:spotter/enums/equipment.dart';
-import 'package:spotter/enums/part.dart';
 
-@HiveType(typeId: 0)
+part 'exercise.g.dart';
+
+@HiveType(typeId: 6)
 class Exercise {
-  @HiveField(0)
-  final String id;
-  @HiveField(1)
-  final String name;
-  @HiveField(2)
-  int weight;
   @HiveField(3)
-  final int recommendedWeight;
-  @HiveField(4)
-  final String lastRep;
-  @HiveField(5)
-  String rep;
-  @HiveField(6)
-  final DateTime date;
-  @HiveField(7)
-  final int lastWeight;
-  @HiveField(8)
-  bool  increased;
-  @HiveField(9)
-  final Equipment? equipment;
-  @HiveField(10)
-  final Part part;
-  @HiveField(11)
-  final int? duration;
+  var id;
+  @HiveField(0)
+  var name;
+  @HiveField(1)
+  var part;
+  @HiveField(2)
+  var equipment;
 
-  Exercise(
-      this.id,
-      this.name,
-      this.weight,
-      this.recommendedWeight,
-      this.lastRep,
-      this.rep,
-      this.date,
-      this.lastWeight,
-      this.increased,
-      this.equipment,
-      this.part,
-      this.duration);
+  Exercise({this.name, this.part, this.equipment, this.id});
 
+  Exercise._({this.name, this.part, this.equipment, this.id});
+
+  factory Exercise.fromJson(Map<String, dynamic> json) {
+    return Exercise._(
+      name: json['name'],
+      part: json['part'],
+      equipment: json['equipment']
+    );
+  }
 }
+

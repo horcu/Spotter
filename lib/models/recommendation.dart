@@ -2,13 +2,24 @@
 import 'package:hive/hive.dart';
 import 'package:spotter/enums/part.dart';
 
-@HiveType()
-class recommendation {
+part 'recommendation.g.dart';
+
+@HiveType(typeId: 7)
+class Recommendation {
 
   @HiveField(0)
   String day;
   @HiveField(1)
-  Part part;
+  var workout = [];
 
-  recommendation({required this.day, required this.part});
+  Recommendation({required this.day, required this.workout});
+
+  Recommendation._({required this.day, required this.workout});
+
+  factory Recommendation.fromJson(Map<String, dynamic> json) {
+    return Recommendation._(
+      day: json['day'],
+      workout: json['workout'],
+    );
+  }
 }

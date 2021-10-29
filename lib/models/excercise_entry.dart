@@ -1,14 +1,18 @@
 import 'package:hive/hive.dart';
 import 'package:spotter/enums/equipment.dart';
 import 'package:spotter/enums/part.dart';
-import 'package:spotter/models/exercise.dart';
+import 'package:spotter/models/session_exercise.dart';
+
+part 'excercise_entry.g.dart';
 
 @HiveType(typeId: 1)
 class ExerciseEntry {
+
   @HiveField(0)
   final String id;
+
   @HiveField(1)
-  final Exercise exercise;
+  final SessionExercise exercise;
 
 
   ExerciseEntry({

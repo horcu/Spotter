@@ -1,4 +1,4 @@
-
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
@@ -7,24 +7,23 @@ import 'package:hive/hive.dart';
 import 'package:spotter/enums/part.dart';
 import 'package:spotter/models/excercise_entry.dart';
 import 'package:spotter/models/exercise.dart';
+import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/models/session.dart';
 
 class SessionSvc extends ChangeNotifier {
   final String _dbKey = 'daily_session';
-  final String _dbPartRecommendationKey = 'part_day_recommendation';
+  final String _dbPartRecommendationKey = 'recommendations';
   final String _dbExercisesKey = 'exercises';
-  var key = '';
+  final String sessionsKey = 'sessions';
   late Session _session;
-  var _oldSessions = <dynamic>[];
-  var loggedExercises = <Exercise>[];
+  var _oldSessions = [];
+  var loggedExercises = <SessionExercise>[];
   late Box<dynamic> _db;
 
   SessionSvc(Box<dynamic> db){
     _session = Session();
     _db = db;
     _session.exerciseEntries = <ExerciseEntry>[];
-    key = _dbKey + "_" + _session.part.name;
-    _oldSessions =  getExistingSessionsByPart(key);
   }
 
   void add(ExerciseEntry exercise) {
@@ -46,34 +45,98 @@ class SessionSvc extends ChangeNotifier {
   }
 
   void save(){
-    _oldSessions.add(_session);
-    _db.put(key, _oldSessions );
+   // _oldSessions.add(_session);
+   // _db.put(key, _oldSessions );
+
+    // save the session entries separate for use with detecting last time used
+    // the equipment and how much weight/distance/ whatever was used/consumed
+    _session.exerciseEntries.forEach((element) {
+      var name = element.exercise.equipment.toString();
+      _db.put(name, element.exercise);
+    });
+
+    // save the session separate
+    _db.put(sessionsKey, _session);
 
     // This call tells the widgets that are listening to this model to rebuild.
     notifyListeners();
   }
 
-  getExistingSessionsByPart(String key) {
-    return _db.containsKey(key) ? _db.get(key) : [];
+  getExistingSessionsByPart(String key) async{
+    return _db.containsKey(key) ? await _db.get(key) : [];
   }
 
   getRecommendedWorkoutPartForTheDay() {
-    var key = _dbPartRecommendationKey;
-    var allRec = _db.containsKey(_dbPartRecommendationKey) ? _db.get
-      (_dbPartRecommendationKey): [];
+    var allRec = _db.containsKey(_dbPartRecommendationKey)
+        ? _db.get(_dbPartRecommendationKey)
+        : [];
 
-    List recs = allRec.toList();
+    List recs = allRec?.toList();
+    var day = getStringDayByDayId(DateTime.now().weekday);
     var rec = recs
-        .firstWhereOrNull((r) => r.day == DateTime.now().weekday.toString());
+        .firstWhereOrNull((r) => r.day == day);
 
-    return rec?.part ?? Part.none;
+    var workout = rec.workout;
+    List<Part> partList = [];
+    var woList = workout.toList();
+    var l = [];
+    for(var i = 0; i< Part.values.length; i++) {
+      var p = Part.values[i];
+      var n = p.name;
+      if(woList.contains(n.toLowerCase())){
+        partList.add(p);
+      }
+    }
+     return partList; // Part.values.firstWhere((e) => e.name == rec.);
   }
 
-  List<Exercise> getAllExercisesByPart(String partName) {
-    return _db.containsKey(_dbExercisesKey) ? _db.get(_dbExercisesKey) : [];
+  getStringDayByDayId(id){
+
+    switch(id) {
+      case 7:
+      return "Sunday";
+      case 1:
+        return "Monday";
+      case 2:
+        return "Tuesday";
+      case 3:
+        return "Wednesday";
+      case 4:
+        return "Thursday";
+      case 5:
+        return "Friday";
+      case 6:
+        return "Saturday";
+      default:
+        return "Monday";
+    }
   }
 
-  logExercise(Exercise exercise) {
+  getAllExercisesByPart(String partName) {
+    var results =  _db.containsKey(_dbExercisesKey) ?  _db.get(_dbExercisesKey) : [];
+    var resList = [];
+    results.forEach((res) => {
+      resList.add(Exercise(name: res.name, part: res.part, equipment: res.equipment))
+    });
+    if(resList.isNotEmpty) {
+      var pName = partName.toLowerCase();
+      var list =  resList.where((e) => e.part == pName).toList();
+      return list;
+    }
+  }
+
+  getDb(){
+    return _db;
+  }
+
+  getLastLoggedSessionForEquipment(name){
+    if(_db.containsKey(name)){
+      return _db.get(name);
+    }
+    return {};
+  }
+
+  logExercise(SessionExercise exercise) {
     if(!loggedExercises.contains(exercise)) {
       loggedExercises.add(exercise);
     }

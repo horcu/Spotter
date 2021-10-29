@@ -3,6 +3,8 @@ import 'package:hive/hive.dart';
 import 'package:spotter/enums/part.dart';
 import 'excercise_entry.dart';
 
+part 'session.g.dart';
+
  @HiveType(typeId: 2)
 class Session extends HiveObject{
   @HiveField(0)
@@ -12,7 +14,7 @@ class Session extends HiveObject{
   late Session _lastSession;
 
   @HiveField(2)
-  Part part = Part.none;
+  List<Part> part = [];
 
   @HiveField(3)
   int duration = 0;
@@ -20,7 +22,5 @@ class Session extends HiveObject{
   @HiveField(4)
   String date = DateTime.now().toString();
 
-  Session() {
-  }
-
+  Session();
 }

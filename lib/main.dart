@@ -2,16 +2,29 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:spotter/enums/equipment.dart';
+import 'package:spotter/models/excercise_entry.dart';
+import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/screens/today.dart';
 import 'package:hive/hive.dart';
+import 'package:spotter/services/exercise_loader_svc.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'enums/part.dart';
+import 'models/exercise.dart';
+import 'models/recommendation.dart';
 import 'models/session.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
 
 Future<void> main() async {
   await Hive.initFlutter();
+  Hive.registerAdapter(ExerciseEntryAdapter());
+  Hive.registerAdapter(ExerciseAdapter());
+  Hive.registerAdapter(RecommendationAdapter());
+  Hive.registerAdapter(SessionAdapter());
+  Hive.registerAdapter(SessionExerciseAdapter());
+  Hive.registerAdapter(EquipmentAdapter());
+  Hive.registerAdapter(PartAdapter());
 
   final Box<dynamic> db = await Hive.openBox('spotter_v1');
 
@@ -33,36 +46,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(home: MyHomePage(title: 'NO DAYS OFF !!', db:
       database)),
     );
-    // return MaterialApp(
-    //  title: 'Spotter',
-    //  theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-     //   primarySwatch: Colors.blueGrey,
-    //  ),
-    //  home: MyHomePage(title: 'NO DAYS OFF !!', db: database),
-   // );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({required this.title, required this.db});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
   final Box<dynamic> db;
@@ -74,16 +62,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    // load exercises if not present
+    var exLoader = ExerciseLoader(widget.db);
+    exLoader.seedDb();
 
     // get the session service to use for the new session
     var _sSvc = SessionSvc(widget.db);
-    Part recommendedWorkoutPart = _sSvc.getRecommendedWorkoutPartForTheDay();
+     List<Part> parts = _sSvc.getRecommendedWorkoutPartForTheDay();
+    // var exercises = _sSvc.getAllExercisesByPart(Part.chest.name);
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -117,8 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ), onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TodaysWorkout(part:
-                recommendedWorkoutPart, svc: _sSvc)),
+                MaterialPageRoute(builder: (context) => TodaysWorkout(parts:
+                parts, svc: _sSvc)),
               );
             }, child: const Text(
               "CHECK IN NOW",

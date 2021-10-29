@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:spotter/enums/equipment.dart';
+import 'package:spotter/enums/part.dart';
+import 'package:spotter/models/excercise_entry.dart';
 import 'package:spotter/models/exercise.dart';
+import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:spotter/widgets/workout_details.dart';
+import 'package:uuid/uuid.dart';
 
 class Workout extends StatefulWidget {
-  const Workout(this.title, this.svc);
+
+  const Workout(this.parts, this.title, this.svc);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -17,24 +23,15 @@ class Workout extends StatefulWidget {
 
   final SessionSvc svc;
   final String title;
+  final List<Part> parts;
 
   @override
   State<Workout> createState() => _WorkoutState();
 }
 
 class _WorkoutState extends State<Workout> {
-  int _counter = 0;
+  Equipment selectedEquipment = Equipment.none;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +42,13 @@ class _WorkoutState extends State<Workout> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     final PageController controller = PageController(initialPage: 0);
-    var allExercises = widget.svc.getAllExercisesByPart(widget.title);
+    var allExercises = [];
+
+    widget.parts.forEach((p) {
+      var exs = widget.svc.getAllExercisesByPart(p.name);
+      allExercises.addAll(exs);
+    });
+
     return
       Scaffold(
         appBar: AppBar(
@@ -61,39 +64,41 @@ class _WorkoutState extends State<Workout> {
         )
     ),
     body:
-    PageView(
-      /// [PageView.scrollDirection] defaults to [Axis.horizontal].
-      /// Use [Axis.vertical] to scroll vertically.
-      scrollDirection: Axis.horizontal,
+    PageView.builder(
       controller: controller,
-      children:  <Widget>[
-         Center( // replace hard coded title with value from list when
-           // returned from hive/db
-          child:  WorkoutDetailsStatefulWidget(allExercises[0].name, widget.svc,
-          allExercises[0]),
-        ),
-        Center(
-          child:  WorkoutDetailsStatefulWidget(allExercises[1].name, widget.svc,
-              allExercises[1]),
-        ),
-        Center(
-          child:  WorkoutDetailsStatefulWidget(allExercises[2].name, widget.svc,
-              allExercises[2]),
-        ),
-        Center(
-          child:  WorkoutDetailsStatefulWidget(allExercises[3].name, widget.svc,
-              allExercises[3]),
-        ),
-        Center(
-          child:  WorkoutDetailsStatefulWidget(allExercises[4].name, widget.svc,
-              allExercises[4]),
-        ),
-        Center(
-          child:  WorkoutDetailsStatefulWidget(allExercises[5].name, widget.svc,
-              allExercises[5]),
-        )
-      ],
-    )
+      onPageChanged: getCurrentPage,
+       itemCount: allExercises.length,
+      itemBuilder: (context, position) {
+        return createPage(position, allExercises);
+      },
+    ),
 );
+  }
+
+  void getCurrentPage(int value) {
+  }
+
+  createPage(position, List<dynamic> exercises) {
+    var exercise = exercises[position];
+    var part =  widget.parts.firstWhere((element) => element.name.toLowerCase() == exercise.part);
+    var equipment = exercise.equipment;
+    var id = const Uuid();
+    var sessionExercise = SessionExercise(
+        id.toString(),
+        exercise.name,
+        200,
+        205,
+        '3',
+        '4',
+        DateTime.now(),
+        200,
+        true,
+        equipment,
+        part,
+        0);
+
+    // pass in the last exercise similar to this new one
+    // changes will then be made to it to save the next
+    return WorkoutDetailsStatefulWidget(exercise.name, widget.svc, sessionExercise);
   }
 }
