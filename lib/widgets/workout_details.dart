@@ -52,10 +52,10 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                flex: 1,
              ),
              Text(
-               widget.title,
+               widget.title.toUpperCase(),
                style: const TextStyle(
-                   fontWeight: FontWeight.bold,
-                   fontSize: 26,
+                   fontWeight: FontWeight.normal,
+                   fontSize: 36,
                    color: Colors.blueGrey),
              ),
              const Spacer(flex: 10),
@@ -65,12 +65,16 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
            flex: 1,
          ),
         ToggleButtons(
+          borderRadius: const BorderRadius.all(Radius.circular(30)),
           children: List<Widget>.generate(widget.exercise.equipment.length, (index) {
             var equipment = widget.exercise.equipment[index];
-            return Container(
-              width: 120,
-                height: 75,
-                child: Text(equipment.toString())
+            return SizedBox(
+              width: 200,
+                height: 125,
+                child: Center( child: Text(equipment.toString(),style: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 30,
+                    color: Colors.blueGrey)))
             );
           }),
           onPressed: (int index) {
@@ -100,7 +104,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                value: _currentDurationSliderValue,
                min: 0,
                max: 200,
-               divisions: 5,
+               divisions: 40,
                label: _currentDurationSliderValue.round().toString() + ' minutes',
                onChanged: (double value) {
                  setState(() {
@@ -118,7 +122,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                value: _currentDistanceSliderValue,
                min: 0,
                max: 10,
-               divisions: 1,
+               divisions: 10,
                label: _currentDistanceSliderValue.round().toString() + ' miles',
                onChanged: (double value) {
                  setState(() {
@@ -136,7 +140,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                value: _currentRepsSliderValue,
                min: 0,
                max: 10,
-               divisions: 1,
+               divisions: 10,
                label: 'Reps: ' +  _currentRepsSliderValue.round().toString(),
                onChanged: (double value) {
                  setState(() {
@@ -157,7 +161,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
               value: _currentDurationSliderValue,
               min: 0,
               max: 400,
-              divisions: 5,
+              divisions: 80,
               label: _currentDurationSliderValue.round().toString() + ' lbs',
               onChanged: (double value) {
                 setState(() {
@@ -175,7 +179,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                 value: _currentRepsSliderValue,
                 min: 0,
                 max: 10,
-                divisions: 1,
+                divisions: 10,
                 label: _currentRepsSliderValue.round().toString(),
                 onChanged: (double value) {
                   setState(() {
