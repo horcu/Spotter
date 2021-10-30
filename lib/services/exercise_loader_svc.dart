@@ -71,7 +71,7 @@ class ExerciseLoader {
 
   assignId(li) {
     var id = const Uuid();
-    li.id = id;
+    li.id = id.toString();
   }
 
 }

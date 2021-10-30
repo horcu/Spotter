@@ -31,6 +31,8 @@ class SessionExercise {
   final Part part;
   @HiveField(11)
   final int? duration;
+  @HiveField(12)
+  final List<dynamic>? history;
 
 
   SessionExercise(
@@ -45,6 +47,7 @@ class SessionExercise {
       this.increased,
       this.equipment,
       this.part,
-      this.duration);
+      this.duration,
+      this.history);
 
 }

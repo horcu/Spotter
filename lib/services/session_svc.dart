@@ -15,6 +15,7 @@ class SessionSvc extends ChangeNotifier {
   final String _dbPartRecommendationKey = 'recommendations';
   final String _dbExercisesKey = 'exercises';
   final String sessionsKey = 'sessions';
+  final String _selectedExercisesKey = 'selectedExercises';
   late Session _session;
   var _oldSessions = [];
   var loggedExercises = <SessionExercise>[];
@@ -116,7 +117,7 @@ class SessionSvc extends ChangeNotifier {
     var results =  _db.containsKey(_dbExercisesKey) ?  _db.get(_dbExercisesKey) : [];
     var resList = [];
     results.forEach((res) => {
-      resList.add(Exercise(name: res.name, part: res.part, equipment: res.equipment))
+      resList.add(Exercise(name: res.name, part: res.part, equipment: res.equipment, history: res.history))
     });
     if(resList.isNotEmpty) {
       var pName = partName.toLowerCase();
@@ -145,4 +146,21 @@ class SessionSvc extends ChangeNotifier {
   checkIn(){}
 
   checkOut(){}
+
+  void saveSelectedExercises(List<dynamic> selectedExercises) {
+    _db.put(_selectedExercisesKey, selectedExercises);
+  }
+
+  List<dynamic> getSelectedExercises() {
+   if(_db.containsKey(_selectedExercisesKey)) {
+     return _db.get(_selectedExercisesKey);
+   }
+   return <dynamic>[];
+  }
+
+  void flushSelectedExercises(){
+    if(_db.containsKey(_selectedExercisesKey)) {
+      _db.delete(_selectedExercisesKey);
+    }
+  }
 }
