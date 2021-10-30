@@ -1,0 +1,882 @@
+{
+  "exercises": [ {
+    "id": "bp",
+    "part": "chest",
+    "name": "Bench Press",
+    "history": [
+      {
+        "weight": "75",
+        "rep": "3",
+        "distance": "",
+        "duration": "",
+        "date": "1635536514012",
+        "equipment": "cable"
+      },
+      {
+        "weight": "75",
+        "rep": "3",
+        "distance": "",
+        "duration": "",
+        "date": "1635536514012",
+        "equipment": "barbell"
+      },
+      {
+        "weight": "75",
+        "rep": "3",
+        "distance": "",
+        "duration": "",
+        "date": "1635536514012",
+        "equipment": "dumbell"
+      },
+      {
+        "weight": "75",
+        "rep": "3",
+        "distance": "",
+        "duration": "",
+        "date": "1635536514012",
+        "equipment": "machine"
+      }
+
+    ],
+    "equipment": ["barbell","dumbell","cable", "machine"]
+  },
+    {
+      "id": "pec",
+      "part": "chest",
+      "name": "Pec",
+      "history": [
+        {
+          "weight": "75",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        },
+        {
+          "weight": "75",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        },{
+          "weight": "75",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }],
+      "equipment": ["dumbell","cable", "machine"]
+    },
+    {
+      "id": "dp",
+      "part": "chest",
+      "name": "Dip",
+      "history": [
+        {
+          "weight": "25",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }],
+      "equipment": ["machine"]
+    },
+    {
+      "id": "pu",
+      "part": "chest",
+      "name": "Pushup",
+      "history": [
+        {
+          "weight": "25",
+          "rep": "50",
+          "distance": "",
+          "duration": "180",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["none"]
+    },
+    {
+      "id": "povr",
+      "part": "chest",
+      "name": "Pullover",
+      "history": [
+        {
+          "weight": "30",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        },
+        {
+          "weight": "30",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        },
+        {
+          "weight": "30",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        }],
+      "equipment": ["dumbell", "barbell", "cable"]
+    },
+    {
+      "id": "pd",
+      "part": "chest",
+      "name": "Pulldown",
+      "history": [
+        {
+          "weight": "50",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        },
+        {
+          "weight": "50",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }],
+      "equipment": ["machine", "cable"]
+    },
+    {
+      "id": "sc",
+      "part": "chest",
+      "name": "Skull  crusher",
+      "history": [
+        {
+          "weight": "50",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        },
+        {
+          "weight": "50",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        },
+        {
+          "weight": "50",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        }],
+      "equipment": ["cable", "barbell", "dumbell"]
+    },
+    {
+      "id": "bp",
+      "part": "core",
+      "name": "laying Leg Raises",
+      "history": [
+        {
+          "weight": "",
+          "rep": "100",
+          "distance": "",
+          "duration": "200",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["none"]
+    },
+    {
+      "part": "core",
+      "name": "Hanging Leg Raises",
+      "history": [
+        {
+          "weight": "",
+          "rep": "50",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }],
+      "equipment": ["machine"]
+    },
+    {
+      "part": "core",
+      "name": "Scissor Kicks",
+      "history": [
+        {
+          "weight": "",
+          "rep": "100",
+          "distance": "",
+          "duration": "200",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["none"]
+    },
+    {
+      "part": "core",
+      "name": "Planks",
+      "history": [
+        {
+          "weight": "",
+          "rep": "2",
+          "distance": "",
+          "duration": "60",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["none"]
+    },
+    {
+      "part": "core",
+      "name": "Russian Twists",
+      "history": [
+        {
+          "weight": "10",
+          "rep": "3",
+          "distance": "",
+          "duration": "200",
+          "date": "1635536514012",
+          "equipment": "ball"
+        }],
+      "equipment": ["ball", "none"]
+    },
+    {
+      "part": "core",
+      "name": "Crunches",
+      "history": [
+        {
+          "weight": "",
+          "rep": "100",
+          "distance": "",
+          "duration": "200",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["none"]
+    },
+    {
+      "part": "core",
+      "name": "Side bend",
+      "history": [
+        {
+          "weight": "10",
+          "rep": "30",
+          "distance": "",
+          "duration": "200",
+          "date": "1635536514012",
+          "equipment": "ball"
+        }],
+      "equipment": ["ball", "barbell", "none"]
+    },
+    {
+      "part": "arm",
+      "name": "Curls",
+      "history": [
+        {
+          "weight": "45",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        },
+        {
+          "weight": "45",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        },
+        {
+          "weight": "45",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }],
+      "equipment": ["dumbell", "barbell", "cable"]
+    },
+    {
+      "part": "arm",
+      "name": "Tricep Kickbacks",
+      "history": [
+        {
+          "weight": "35",
+          "rep": "3",
+          "distance": "",
+          "duration": "200",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        }],
+      "equipment": ["dumbell", "cable"]
+    },
+    {
+      "part": "arm",
+      "name": "Chinups",
+      "history": [
+        {
+          "weight": "",
+          "rep": "3",
+          "distance": "",
+          "duration": "200",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }],
+      "equipment": ["machine"]
+    },
+    {
+      "part": "arm",
+      "name": "Rope",
+      "history": [
+        {
+          "weight": "30",
+          "rep": "3",
+          "distance": "",
+          "duration": "60",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["none"]
+    },
+    {
+      "part": "leg",
+      "name": "Leg Curls",
+      "history": [
+        {
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }],
+      "equipment": ["machine", "cable"]
+    },
+    {
+      "part": "leg",
+      "name": "Leg Press",
+      "history": [
+        {
+          "weight": "30",
+          "rep": "3",
+          "distance": "",
+          "duration": "60",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["machine"]
+    },
+    {
+      "part": "leg",
+      "name": "Leg Extension",
+      "history": [
+        {
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }],
+      "equipment": ["machine"]
+    },
+    {
+      "part": "leg",
+      "name": "Squat",
+      "history": [
+        {
+          "weight": "150",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }],
+      "equipment": ["machine", "barbell"]
+    },
+    {
+      "part": "leg",
+      "name": "Deadlift",
+      "history": [
+        {
+          "weight": "120",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        }],
+      "equipment": ["machine", "barbell", "dumbell"]
+    },
+    {
+      "part": "leg",
+      "name": "Squat Machine",
+      "history": [
+        {
+          "weight": "150",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }],
+      "equipment": ["machine", "barbell", "dumbell"]
+    },
+    {
+      "part": "leg",
+      "name": "Stepups",
+      "history": [
+        {
+          "weight": "0",
+          "rep": "50",
+          "distance": "",
+          "duration": "60",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["barbell", "dumbell", "none"]
+    },
+    {
+      "part": "leg",
+      "name": "Running",
+      "history": [
+        {
+          "weight": "0",
+          "rep": "1",
+          "distance": "1",
+          "duration": "60",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["treadmill", "none"]
+    },
+    {
+      "part": "leg",
+      "name": "Jump Lunge",
+      "history": [
+        {
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "60",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        }],
+      "equipment": ["dumbell", "ball", "none"]
+    },
+    {
+      "part": "leg",
+      "name": "Toe Press",
+      "history": [
+        {
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "60",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["dumbell", "machine","none"]
+    },
+    {
+      "part": "leg",
+      "name": "Calf Raise",
+      "history": [
+        {
+          "weight": "30",
+          "rep": "3",
+          "distance": "",
+          "duration": "60",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["dumbell", "machine", "none"]
+    },
+    {
+      "part": "back",
+      "name": "Pec",
+      "history": [
+        {
+          "weight": "40",
+          "rep": "3",
+          "distance": "",
+          "duration": "60",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        }],
+      "equipment": ["cable", "machine", "dumbell"]
+    },
+    {
+      "part": "back",
+      "name": "Pullback",
+      "history": [
+        {
+          "weight": "40",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        }],
+      "equipment": ["cable", "dumbell"]
+    },
+    {
+      "part": "back",
+      "name": "Row",
+      "history": [
+        {
+          "weight": "100",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }],
+      "equipment": ["cable", "dumbell", "barbell"]
+    },
+    {
+      "part": "back",
+      "name": "Pullup",
+      "history": [
+        {
+          "weight": "0",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }],
+      "equipment": ["machine"]
+    },
+    {
+      "part": "back",
+      "name": "Pulldown",
+      "history": [
+        {
+          "weight": "40",
+          "rep": "3",
+          "distance": "",
+          "duration": "60",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }],
+      "equipment": ["cable", "machine"]
+    },
+    {
+      "part": "back",
+      "name": "Deadlift",
+      "history": [
+        {
+          "weight": "150",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        }],
+      "equipment": ["barbell", "machine", "cable"]
+    },
+    {
+      "part": "back",
+      "name": "back Extension",
+      "history": [
+        {
+          "weight": "25",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }],
+      "equipment": ["machine"]
+    },
+    {
+      "part": "shoulder",
+      "name": "Front Delt Raise",
+      "history": [
+        {
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        },
+        {
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        },{
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }],
+      "equipment": ["barbell", "dumbell", "cable"]
+    },
+    {
+      "part": "shoulder",
+      "name": "Side Delt Raise",
+      "history": [
+        {
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        },{
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        },{
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }],
+      "equipment": ["barbell", "machine", "cable"]
+    },
+    {
+      "part": "shoulder",
+      "name": "Bent Lat Raise",
+      "history": [
+        {
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        },{
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        },{
+          "weight": "20",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }],
+      "equipment": ["barbell", "machine", "cable"]
+    },
+    {
+      "part": "shoulder",
+      "name": "Barbell Neck Press",
+      "history": [
+        {
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        },
+        {
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        }, {
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }, {
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }],
+      "equipment": ["dumbell", "barbell", "machine", "cable"]
+    },
+    {
+      "part": "shoulder",
+      "name": "Barbell Military Press",
+      "history": [
+        {
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }, {
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        }, {
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        }],
+      "equipment": ["barbell", "machine", "cable"]
+    },
+    {
+      "part": "shoulder",
+      "name": "Upright Row",
+      "history": [
+        {
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "barbell"
+        },{
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "machine"
+        },{
+          "weight": "70",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "cable"
+        }],
+      "equipment": ["barbell", "machine", "cable"]
+    },
+    {
+      "part": "glute",
+      "name": "Kickback",
+      "history": [
+        {
+          "weight": "0",
+          "rep": "30",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["cable", "none"]
+    },
+    {
+      "part": "glute",
+      "name": "Duck Squat",
+      "history": [
+        {
+          "weight": "20",
+          "rep": "30",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        }],
+      "equipment": ["none", "machine", "cable", "dumbell"]
+    },
+    {
+      "part": "glute",
+      "name": "Lunges",
+      "history": [
+        {
+          "weight": "30",
+          "rep": "3",
+          "distance": "",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "dumbell"
+        }],
+      "equipment": ["dumbell", "cable", "none", "ball"]
+    },
+    {
+      "part": "cardio",
+      "name": "Running",
+      "history": [
+        {
+          "weight": "0",
+          "rep": "1",
+          "distance": "1",
+          "duration": "900000",
+          "date": "1635536514012",
+          "equipment": "treadmill"
+        },
+        {
+          "weight": "10",
+          "rep": "1",
+          "distance": "1.6",
+          "duration": "1700000",
+          "date": "1635536514012",
+          "equipment": "outdoor"
+        }],
+      "equipment": ["outdoor", "treadmill"]
+    },
+    {
+      "part": "cardio",
+      "name": "Burpees",
+      "history": [
+        {
+          "weight": "0",
+          "rep": "10",
+          "distance": "0",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "none"
+        }],
+      "equipment": ["outdoor"]
+
+    },
+    {
+      "part": "cardio",
+      "name": "Eliptical",
+      "history": [
+        {
+          "weight": "0",
+          "rep": "1",
+          "distance": "1",
+          "duration": "",
+          "date": "1635536514012",
+          "equipment": "eliptical"
+        }],
+      "equipment": ["eliptical"]
+    }
+  ]
+}

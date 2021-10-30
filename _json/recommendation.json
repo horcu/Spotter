@@ -1,0 +1,39 @@
+{
+  "recommedations": [
+    {
+      "id": "1",
+      "day": "Sunday",
+      "workout": ["arm", "shoulder"]
+    },
+    {
+      "id": "2",
+      "day": "Monday",
+      "workout": ["cardio", "yoga"]
+    },
+    {
+      "id": "3",
+      "day": "Tuesday",
+      "workout": ["glute", "leg"]
+    },
+    {
+      "id": "4",
+      "day": "Wednesday",
+      "workout": ["cardio"]
+    },
+    {
+      "id": "5",
+      "day": "Thursday",
+      "workout": ["chest", "core", "back"]
+    },
+    {
+      "id": "6",
+      "day": "Friday",
+      "workout": ["cardio"]
+    },
+    {
+      "id": "7",
+      "day": "Saturday",
+      "workout": ["chest", "shoulder", "arm"]
+    }
+  ]
+}
