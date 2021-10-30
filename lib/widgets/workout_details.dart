@@ -232,7 +232,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
         ),
       ]),
            floatingActionButton: FloatingActionButton(
-             onPressed: showActionMenu(),
+             onPressed: logExercise(context),
              tooltip: 'Log',
              child: const Icon(Icons.save_rounded),
            ) // This trailing comma makes auto-formatting nicer for build methods.
@@ -244,10 +244,38 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
    // currentRecommendationModel = widget.svc.getAllExercisesByPart(newValue.name);
   }
 
-  showActionMenu() {
-    // actually show the floating button menu with options
-    // for logging, editing exercise and checking out of a session
-    var newEntry = widget.exercise;
-    widget.svc.loggedExercises.add(newEntry);
+  logExercise(BuildContext context) {
+
+      // set up the buttons
+      Widget cancelButton = FlatButton(
+        child: const Text("cancel"),
+        onPressed:  () {},
+      );
+      Widget continueButton = FlatButton(
+        child: const Text("save"),
+        onPressed:  () {
+          // actually show the floating button menu with options
+          // for logging, editing exercise and checking out of a session
+          var newEntry = widget.exercise;
+          widget.svc.loggedExercises.add(newEntry);
+        },
+      );
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: const Text("AlertDialog"),
+        content: const Text("Log this exercise ?"),
+        actions: [
+          cancelButton,
+          continueButton,
+        ],
+      );
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+
   }
 }

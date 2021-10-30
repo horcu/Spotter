@@ -76,9 +76,9 @@ class SessionSvc extends ChangeNotifier {
     var rec = recs
         .firstWhereOrNull((r) => r.day == day);
 
-    var workout = rec.workout;
+    var workout = rec?.workout;
     List<Part> partList = [];
-    var woList = workout.toList();
+    var woList = workout?.toList();
     var l = [];
     for(var i = 0; i< Part.values.length; i++) {
       var p = Part.values[i];
