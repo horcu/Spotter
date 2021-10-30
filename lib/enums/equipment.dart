@@ -19,7 +19,13 @@ enum Equipment {
   @HiveField(6)
   ball,
   @HiveField(7)
-  none
+  rope,
+  @HiveField(8)
+  plate,
+  @HiveField(9)
+  none,
+@HiveField(10)
+outdoor
 }
 
 extension EquipmentExtension on Equipment {
@@ -39,6 +45,12 @@ extension EquipmentExtension on Equipment {
         return 'Treadmill';
       case Equipment.ball:
         return 'Ball';
+      case Equipment.rope:
+        return 'Rope';
+      case Equipment.plate:
+        return 'Plate';
+      case Equipment.outdoor:
+        return 'Outdoor';
       default:
         return 'None';
     }

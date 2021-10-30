@@ -1,16 +1,18 @@
+
 import 'package:flutter/material.dart';
 import 'package:spotter/enums/equipment.dart';
 import 'package:spotter/enums/part.dart';
-import 'package:spotter/models/excercise_entry.dart';
 import 'package:spotter/models/exercise.dart';
 import 'package:spotter/models/session_exercise.dart';
+import 'package:spotter/screens/today.dart';
 import 'package:spotter/services/session_svc.dart';
+import 'package:spotter/widgets/topbar.dart';
 import 'package:spotter/widgets/workout_details.dart';
 import 'package:uuid/uuid.dart';
 
 class Workout extends StatefulWidget {
 
-  const Workout(this.parts, this.title, this.svc);
+  const Workout(this.parts, this.title, this.svc, this.selectedExercises);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -20,7 +22,7 @@ class Workout extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
-
+  final List<dynamic> selectedExercises;
   final SessionSvc svc;
   final String title;
   final List<Part> parts;
@@ -51,25 +53,22 @@ class _WorkoutState extends State<Workout> {
 
     return
       Scaffold(
-        appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title:
-        Row(
-          children: [
-            Text(widget.title),
-            Spacer(flex: 10),
-            Text('1: 24 s'),
-          ],
-        )
-    ),
+        appBar: TopBar(
+          onTitleTapped: (){},
+          title: widget.title,
+          onPressed: (){ Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TodaysWorkout(parts:
+          widget.parts, svc: widget.svc)));},
+          child: const Icon(Icons.arrow_back),
+        ),
     body:
     PageView.builder(
       controller: controller,
       onPageChanged: getCurrentPage,
-       itemCount: allExercises.length,
+       itemCount: widget.selectedExercises.length,
       itemBuilder: (context, position) {
-        return createPage(position, allExercises);
+        return createPage(position, widget.selectedExercises);
       },
     ),
 );
@@ -82,7 +81,8 @@ class _WorkoutState extends State<Workout> {
     var exercise = exercises[position];
     var part =  widget.parts.firstWhere((element) => element.name.toLowerCase() == exercise.part);
     var equipment = exercise.equipment;
-    var id = const Uuid();
+    var id = const Uuid().toString();
+    var history = exercise.history ?? {};
     var sessionExercise = SessionExercise(
         id.toString(),
         exercise.name,
@@ -95,7 +95,8 @@ class _WorkoutState extends State<Workout> {
         true,
         equipment,
         part,
-        0);
+        0,
+        history);
 
     // pass in the last exercise similar to this new one
     // changes will then be made to it to save the next

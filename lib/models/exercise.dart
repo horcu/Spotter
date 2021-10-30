@@ -1,6 +1,8 @@
 
 import 'package:hive/hive.dart';
 
+import 'history.dart';
+
 part 'exercise.g.dart';
 
 @HiveType(typeId: 6)
@@ -13,16 +15,19 @@ class Exercise {
   var part;
   @HiveField(2)
   var equipment;
+  @HiveField(4)
+  var history;
 
-  Exercise({this.name, this.part, this.equipment, this.id});
+  Exercise({this.name, this.part, this.equipment, this.id, this.history});
 
-  Exercise._({this.name, this.part, this.equipment, this.id});
+  Exercise._({this.name, this.part, this.equipment, this.id, this.history});
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
     return Exercise._(
       name: json['name'],
       part: json['part'],
-      equipment: json['equipment']
+      equipment: json['equipment'],
+      history: json['history']
     );
   }
 }

@@ -28,6 +28,8 @@ class PartAdapter extends TypeAdapter<Part> {
       case 6:
         return Part.cardio;
       case 7:
+        return Part.shoulder;
+      case 8:
         return Part.none;
       default:
         return Part.chest;
@@ -58,8 +60,11 @@ class PartAdapter extends TypeAdapter<Part> {
       case Part.cardio:
         writer.writeByte(6);
         break;
-      case Part.none:
+      case Part.shoulder:
         writer.writeByte(7);
+        break;
+      case Part.none:
+        writer.writeByte(8);
         break;
     }
   }

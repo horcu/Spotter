@@ -29,13 +29,14 @@ class SessionExerciseAdapter extends TypeAdapter<SessionExercise> {
       (fields[9] as List).cast<dynamic>(),
       fields[10] as Part,
       fields[11] as int?,
+      (fields[12] as List?)?.cast<dynamic>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, SessionExercise obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -59,7 +60,9 @@ class SessionExerciseAdapter extends TypeAdapter<SessionExercise> {
       ..writeByte(10)
       ..write(obj.part)
       ..writeByte(11)
-      ..write(obj.duration);
+      ..write(obj.duration)
+      ..writeByte(12)
+      ..write(obj.history);
   }
 
   @override

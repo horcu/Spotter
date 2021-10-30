@@ -28,7 +28,13 @@ class EquipmentAdapter extends TypeAdapter<Equipment> {
       case 6:
         return Equipment.ball;
       case 7:
+        return Equipment.rope;
+      case 8:
+        return Equipment.plate;
+      case 9:
         return Equipment.none;
+      case 10:
+        return Equipment.outdoor;
       default:
         return Equipment.machine;
     }
@@ -58,8 +64,17 @@ class EquipmentAdapter extends TypeAdapter<Equipment> {
       case Equipment.ball:
         writer.writeByte(6);
         break;
-      case Equipment.none:
+      case Equipment.rope:
         writer.writeByte(7);
+        break;
+      case Equipment.plate:
+        writer.writeByte(8);
+        break;
+      case Equipment.none:
+        writer.writeByte(9);
+        break;
+      case Equipment.outdoor:
+        writer.writeByte(10);
         break;
     }
   }

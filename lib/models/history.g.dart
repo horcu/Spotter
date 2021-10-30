@@ -1,44 +1,47 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'exercise.dart';
+part of 'history.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ExerciseAdapter extends TypeAdapter<Exercise> {
+class HistoryAdapter extends TypeAdapter<History> {
   @override
-  final int typeId = 6;
+  final int typeId = 13;
 
   @override
-  Exercise read(BinaryReader reader) {
+  History read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Exercise(
-      name: fields[0] as dynamic,
-      part: fields[1] as dynamic,
-      equipment: fields[2] as dynamic,
-      id: fields[3] as dynamic,
-      history: fields[4] as dynamic,
+    return History(
+      equipment: fields[5] as dynamic,
+      date: fields[4] as dynamic,
+      distance: fields[2] as dynamic,
+      duration: fields[3] as dynamic,
+      rep: fields[1] as dynamic,
+      weight: fields[0] as dynamic,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Exercise obj) {
+  void write(BinaryWriter writer, History obj) {
     writer
-      ..writeByte(5)
-      ..writeByte(3)
-      ..write(obj.id)
+      ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.weight)
       ..writeByte(1)
-      ..write(obj.part)
+      ..write(obj.rep)
       ..writeByte(2)
-      ..write(obj.equipment)
+      ..write(obj.distance)
+      ..writeByte(3)
+      ..write(obj.duration)
       ..writeByte(4)
-      ..write(obj.history);
+      ..write(obj.date)
+      ..writeByte(5)
+      ..write(obj.equipment);
   }
 
   @override
@@ -47,7 +50,7 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ExerciseAdapter &&
+      other is HistoryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

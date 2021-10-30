@@ -19,6 +19,8 @@ enum Part {
 @HiveField(6)
  cardio,
 @HiveField(7)
+shoulder,
+@HiveField(8)
   none
 }
 
@@ -38,6 +40,8 @@ extension PartExtension on Part {
         return 'Leg';
       case Part.glute:
         return 'Glute';
+      case Part.shoulder:
+        return 'Shoulder';
       case Part.cardio:
         return 'Cardio';
       default:

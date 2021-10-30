@@ -9,8 +9,10 @@ import 'package:spotter/screens/today.dart';
 import 'package:hive/hive.dart';
 import 'package:spotter/services/exercise_loader_svc.dart';
 import 'package:spotter/services/session_svc.dart';
+import 'package:spotter/widgets/topbar.dart';
 import 'enums/part.dart';
 import 'models/exercise.dart';
+import 'models/history.dart';
 import 'models/recommendation.dart';
 import 'models/session.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -25,6 +27,7 @@ Future<void> main() async {
   Hive.registerAdapter(SessionExerciseAdapter());
   Hive.registerAdapter(EquipmentAdapter());
   Hive.registerAdapter(PartAdapter());
+  Hive.registerAdapter(HistoryAdapter());
 
   final Box<dynamic> db = await Hive.openBox('spotter_v1');
 
@@ -44,9 +47,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SessionSvc(database))
       ],
       child: MaterialApp(
+
           theme: ThemeData(
               appBarTheme: const AppBarTheme(
-                color: Colors.indigo,
+                color: Colors.white,
               )),
           home: MyHomePage(title: 'NO DAYS OFF !!', db:
       database)),
@@ -77,11 +81,17 @@ class _MyHomePageState extends State<MyHomePage> {
     // var exercises = _sSvc.getAllExercisesByPart(Part.chest.name);
 
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+       appBar: TopBar(
+         onTitleTapped: (){},
+         title: widget.title,
+         onPressed: (){},
+         child: const Icon(Icons.home),
+       ),
+      // AppBar(
+      //   // Here we take the value from the MyHomePage object that was created by
+      //   // the App.build method, and use it to set our appbar title.
+      //   title: Text(widget.title),
+      // ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -91,8 +101,9 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             ElevatedButton(
               style: ButtonStyle(
+
                 backgroundColor: MaterialStateProperty.all<Color>(Colors
-                    .blueGrey),
+                    .white),
               ), onPressed: () {
               Navigator.push(
                 context,
@@ -100,8 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 parts, svc: _sSvc)),
               );
             }, child: const Text(
-              "CHECK IN NOW",
-              style:  TextStyle(fontWeight: FontWeight.normal, fontSize: 40
+              "CHECK IN",
+              style:  TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 28
               ),
             ),
             )
