@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotter/services/session_svc.dart';
 
 import '../constants.dart';
 
@@ -8,15 +9,18 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget child;
   final Function onPressed;
   final Function onTitleTapped;
+  final SessionSvc svc;
 
   @override
   final Size preferredSize;
 
-   const TopBar({required this.title, required this.child, required this.onPressed, required this.onTitleTapped})
+   const TopBar({required this.title, required this.child, required this
+       .onPressed, required this.onTitleTapped, required this.svc})
       : preferredSize = const Size.fromHeight(60.0);
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Column(
         children: <Widget>[
@@ -62,13 +66,17 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                         alignment: Alignment.centerLeft,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 30),
-                          child: Text(
-                            title,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
-                              // color: Colors.black54,
-                            ),
+                          child: Row(
+                            children: [
+                              Text(
+                                title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25,
+                                  // color: Colors.black54,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

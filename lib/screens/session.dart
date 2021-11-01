@@ -1,48 +1,39 @@
 
+import 'package:collection/src/iterable_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:spotter/enums/equipment.dart';
 import 'package:spotter/enums/part.dart';
 import 'package:spotter/models/exercise.dart';
 import 'package:spotter/models/session_exercise.dart';
-import 'package:spotter/screens/today.dart';
+import 'package:spotter/screens/exercises.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:spotter/widgets/topbar.dart';
 import 'package:spotter/widgets/workout_details.dart';
 import 'package:uuid/uuid.dart';
 
-class Workout extends StatefulWidget {
+class WorkoutSession extends StatefulWidget {
 
-  const Workout(this.parts, this.title, this.svc, this.selectedExercises);
+  const WorkoutSession(this.parts, this.title, this.svc, this.selectedExercises);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
   final List<dynamic> selectedExercises;
   final SessionSvc svc;
   final String title;
   final List<Part> parts;
 
   @override
-  State<Workout> createState() => _WorkoutState();
+  State<WorkoutSession> createState() => _WorkoutSessionState();
 }
 
-class _WorkoutState extends State<Workout> {
+class _WorkoutSessionState extends State<WorkoutSession> {
   Equipment selectedEquipment = Equipment.none;
+
+  int currentIndex = 0;
 
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
     final PageController controller = PageController(initialPage: 0);
     var allExercises = [];
 
@@ -51,16 +42,29 @@ class _WorkoutState extends State<Workout> {
       allExercises.addAll(exs);
     });
 
+
+    // if(widget.svc.getSessionBar().timerSubscription.isPaused) {
+    //   widget.svc.getSessionBar().timerSubscription.resume();
+    // }
+
     return
       Scaffold(
         appBar: TopBar(
-          onTitleTapped: (){},
+          onTitleTapped: (){
+
+          },
           title: widget.title,
-          onPressed: (){ Navigator.push(
+          onPressed: (){
+            Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => TodaysWorkout(parts:
-          widget.parts, svc: widget.svc)));},
+              MaterialPageRoute(
+                  builder: (context) => Exercises(parts: widget.parts, svc: widget.svc)
+              ));
+
+           // widget.svc.getSessionBar().pauseSessionTimer();
+            },
           child: const Icon(Icons.arrow_back),
+          svc: widget.svc,
         ),
     body:
     PageView.builder(
@@ -68,10 +72,14 @@ class _WorkoutState extends State<Workout> {
       onPageChanged: getCurrentPage,
        itemCount: widget.selectedExercises.length,
       itemBuilder: (context, position) {
+        currentIndex = position;
         return createPage(position, widget.selectedExercises);
       },
     ),
-);
+
+   bottomSheet: widget.svc.getSessionBar()
+        // This trailing comma makes auto-formatting nicer for build methods.
+      );
   }
 
   void getCurrentPage(int value) {
@@ -79,22 +87,27 @@ class _WorkoutState extends State<Workout> {
 
   createPage(position, List<dynamic> exercises) {
     var exercise = exercises[position];
-    var part =  widget.parts.firstWhere((element) => element.name.toLowerCase() == exercise.part);
+    var part =  widget.parts.firstWhereOrNull((element) => element.name
+        .toLowerCase() == exercise.part);
     var equipment = exercise.equipment;
-    var id = const Uuid().toString();
+    var id = const Uuid().v1().toString();
     var history = exercise.history ?? {};
+
     var sessionExercise = SessionExercise(
         id.toString(),
         exercise.name,
-        200,
-        205,
-        '3',
-        '4',
+        0,
+        0,
+        '0',
+        '0',
         DateTime.now(),
-        200,
+        0,
         true,
         equipment,
-        part,
+        part ?? Part.none,
+        0,
+        0,
+        0,
         0,
         history);
 
@@ -102,4 +115,6 @@ class _WorkoutState extends State<Workout> {
     // changes will then be made to it to save the next
     return WorkoutDetailsStatefulWidget(exercise.name, widget.svc, sessionExercise);
   }
+
+
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spotter/enums/part.dart';
 import 'package:spotter/models/exercise.dart';
-import 'package:spotter/screens/workout.dart';
+import 'package:spotter/screens/session.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:spotter/widgets/topbar.dart';
@@ -9,19 +9,19 @@ import 'package:spotter/widgets/topbar.dart';
 import '../main.dart';
 import 'categories.dart';
 
-class TodaysWorkout extends StatefulWidget {
+class Exercises extends StatefulWidget {
   List<Part> parts;
   SessionSvc svc;
   List<String> selectedExerciseIds = [];
   List<dynamic> selectedExercises = [];
 
-  TodaysWorkout({required this.parts, required this.svc});
+  Exercises({required this.parts, required this.svc});
 
   @override
-  State<TodaysWorkout> createState() => _TodaysWorkoutState();
+  State<Exercises> createState() => _ExercisesState();
 }
 
-class _TodaysWorkoutState extends State<TodaysWorkout> {
+class _ExercisesState extends State<Exercises> {
   @override
   Widget build(BuildContext context) {
     var title = '';
@@ -46,21 +46,16 @@ class _TodaysWorkoutState extends State<TodaysWorkout> {
     return Scaffold(
       appBar: TopBar(
         onTitleTapped: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      Workout(widget.parts, title, widget.svc, widget.selectedExercises)));
         },
-        title: title.toUpperCase(),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      MyHomePage(title: title, db: widget.svc.getDb())));
-        },
+        title: 'Exercises',
+        onPressed: () { Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    MyHomePage(db: widget.svc.getDb(), title: 'Spotter',)
+            ));},
         child: const Icon(Icons.arrow_back),
+        svc: widget.svc,
       ),
       body: ListView.builder(
           itemCount: allExercises.length,
@@ -103,6 +98,24 @@ class _TodaysWorkoutState extends State<TodaysWorkout> {
                               ),
                     trailing: const Text("")));
           }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: startWorkout,
+          tooltip: 'Start Session',
+          child: const Icon(Icons.arrow_right_alt),
+        ) ,
+      //  bottomSheet:  widget.svc.getSessionBar(),// T
     );
+  }
+
+  void startWorkout() {
+    // check in
+    widget.svc.checkIn();
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                WorkoutSession(widget.parts, 'Session', widget.svc, widget
+                    .selectedExercises)));
   }
 }

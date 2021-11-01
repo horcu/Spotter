@@ -1,16 +1,17 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:spotter/models/exercise.dart';
 import 'package:spotter/models/recommendation.dart';
 import 'package:uuid/uuid.dart';
 
-class ExerciseLoader {
+class ExerciseLoader extends ChangeNotifier {
 
   final String _dbExercisesKey = 'exercises';
-  final String _dbRecommendationsKey = 'recommendations';
+  final String _dbRecommendationsKey = 'schedule';
   late Box _db;
   var exList;
   var recommendations;
@@ -64,14 +65,13 @@ class ExerciseLoader {
   }
 
   Future getRecommendationsFromJsonList() async {
-    final String response = await rootBundle.loadString('_json/recommendation.json');
-    return await json.decode(response)["recommedations"].map((data) => Recommendation.fromJson(data))
+    final String response = await rootBundle.loadString('_json/schedule.json');
+    return await json.decode(response)["schedule"].map((data) => Recommendation.fromJson(data))
         .toList();
   }
 
   assignId(li) {
-    var id = const Uuid();
-    li.id = id.toString();
+    li.id = const Uuid().v1();
   }
 
 }

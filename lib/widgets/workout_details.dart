@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 import 'package:spotter/enums/equipment.dart';
 import 'package:spotter/enums/part.dart';
@@ -6,8 +7,11 @@ import 'package:spotter/models/excercise_entry.dart';
 import 'package:spotter/models/history.dart';
 import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/models/session.dart';
+import 'package:spotter/screens/checkout.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:uuid/uuid.dart';
+
+import '../main.dart';
 
 /// This is the stateful widget that the main application instantiates.
 class WorkoutDetailsStatefulWidget extends StatefulWidget {
@@ -34,34 +38,49 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
   var _currentRepsSliderValue = 0.0;
 
   var _currentWeightSliderValue = 0.0;
+  bool hasNotLoadedDefaults = true;
 
   @override
   Widget build(BuildContext context) {
    // return Consumer<Session>(builder: (context, session, child) {
 
+    var isDialOpen = ValueNotifier<bool>(false);
+    var customDialRoot = false;
+    var speedDialDirection = SpeedDialDirection.up;
+    var buttonSize = 56.0;
+    var childrenButtonSize = 56.0;
+    var extend = false;
+    var visible = true;
+    var rmicons = false;
+
     List<String> doubleList = List<String>.generate(25, (int index) => '${index * 5 + 1}');
     List<DropdownMenuItem> menuItemList = doubleList.map((val) => DropdownMenuItem(value: val, child: Text(val))).toList();
     var exName = widget.sessionExercise.part.name.toString().toLowerCase();
 
-    var history = widget.sessionExercise.history;;
+    var history = widget.sessionExercise.history;
     // set the default settings
-    if(history != null && history.isNotEmpty) {
+    if(history != null && history.isNotEmpty && hasNotLoadedDefaults) {
       var svd = history[selectedIndex]['duration'].toString();
       var parsed = svd != '' ? int.parse(svd) : 0;
       var converted = convertTime(parsed) ?? 0;
       _currentDurationSliderValue = converted.toDouble();
+      widget.sessionExercise.lastDuration = converted;
 
       var dist  = history[selectedIndex]['distance'].toString();
       _currentDistanceSliderValue = dist != '' ? double.parse(dist) : 0.0;
+      widget.sessionExercise.lastDistance = dist != '' ? double.parse(dist) : 0.0;
 
       var rep = history[selectedIndex]['rep'].toString();
       _currentRepsSliderValue = rep != '' ? double.parse(rep) : 0.0;
+      widget.sessionExercise.lastRep = rep != '' ? double.parse(rep).toString()
+          : '0.0';
 
       var weight = history[selectedIndex]['weight'].toString();
       _currentWeightSliderValue = weight != '' ? double.parse(weight) : 0.0;
+      widget.sessionExercise.lastWeight = weight != '' ? int.parse(weight) : 0;
+
+      hasNotLoadedDefaults = false;
     }
-
-
        return Scaffold(
            body : Column(
              children: <Widget>[
@@ -102,6 +121,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
           onPressed: (int index) {
             setState(() {
               selectedIndex = index;
+              hasNotLoadedDefaults = true;
             });
           },
           isSelected: List<bool>.generate(widget.sessionExercise.equipment.length, (index) { return selectedIndex == index;}),
@@ -130,6 +150,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                onChanged: (double value) {
                  setState(() {
                    _currentDurationSliderValue = value;
+                   widget.sessionExercise.duration = value.round();
                  });
                },
              ),
@@ -153,6 +174,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                onChanged: (double value) {
                  setState(() {
                    _currentDistanceSliderValue = value;
+                   widget.sessionExercise.distance = value;
                  });
                },
              ),
@@ -176,6 +198,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                onChanged: (double value) {
                  setState(() {
                    _currentRepsSliderValue = value;
+                   widget.sessionExercise.rep = value.toString();
                  });
                },
              ),
@@ -203,6 +226,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
               onChanged: (double value) {
                 setState(() {
                   _currentWeightSliderValue = value;
+                  widget.sessionExercise.weight = value.round();
                 });
               },
             ),
@@ -226,6 +250,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                 onChanged: (double value) {
                   setState(() {
                     _currentRepsSliderValue = value;
+                    widget.sessionExercise.rep = value.toString();
                   });
                 },
               ),
@@ -273,11 +298,136 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
           ],
         ),
       ]),
-           floatingActionButton: FloatingActionButton(
-             onPressed: showActionMenu,
-             tooltip: 'Log',
-             child: const Icon(Icons.save_rounded),
-           ) // This trailing comma makes auto-formatting nicer for build methods.
+         floatingActionButton: SpeedDial(
+           // animatedIcon: AnimatedIcons.menu_close,
+           // animatedIconTheme: IconThemeData(size: 22.0),
+           // / This is ignored if animatedIcon is non null
+           // child: Text("open"),
+           // activeChild: Text("close"),
+           icon: Icons.add,
+           activeIcon: Icons.close,
+           spacing: 3,
+           openCloseDial: isDialOpen,
+           childPadding: const EdgeInsets.all(5),
+           spaceBetweenChildren: 4,
+           dialRoot: customDialRoot
+               ? (ctx, open, toggleChildren) {
+             return ElevatedButton(
+               onPressed: toggleChildren,
+               style: ElevatedButton.styleFrom(
+                 primary: Colors.blue[900],
+                 padding: const EdgeInsets.symmetric(
+                     horizontal: 22, vertical: 18),
+               ),
+               child: const Text(
+                 "Custom Dial Root",
+                 style: TextStyle(fontSize: 17),
+               ),
+             );
+           }
+               : null,
+           buttonSize: 56, // it's the SpeedDial size which defaults to 56 itself
+           // iconTheme: IconThemeData(size: 22),
+           label: extend
+               ? const Text("Open")
+               : null, // The label of the main button.
+           /// The active label of the main button, Defaults to label if not specified.
+           activeLabel: extend ? const Text("Close") : null,
+
+           /// Transition Builder between label and activeLabel, defaults to FadeTransition.
+           // labelTransitionBuilder: (widget, animation) => ScaleTransition(scale: animation,child: widget),
+           /// The below button size defaults to 56 itself, its the SpeedDial childrens size
+           childrenButtonSize: childrenButtonSize,
+           visible: visible,
+           direction: speedDialDirection,
+           switchLabelPosition: false,
+
+           /// If true user is forced to close dial manually
+           closeManually: false,
+
+           /// If false, backgroundOverlay will not be rendered.
+           renderOverlay: true,
+           // overlayColor: Colors.black,
+           // overlayOpacity: 0.5,
+           onOpen: () => debugPrint('OPENING DIAL'),
+           onClose: () => debugPrint('DIAL CLOSED'),
+           useRotationAnimation: true,
+           tooltip: 'Open Speed Dial',
+           heroTag: 'speed-dial-hero-tag',
+           // foregroundColor: Colors.black,
+           // backgroundColor: Colors.white,
+           // activeForegroundColor: Colors.red,
+           // activeBackgroundColor: Colors.blue,
+           elevation: 8.0,
+           isOpenOnStart: false,
+           animationSpeed: 200,
+           shape: customDialRoot
+               ? const RoundedRectangleBorder()
+               : const StadiumBorder(),
+           // childMargin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+           children: [
+             SpeedDialChild(
+               child: !rmicons ? const Icon(Icons.book_rounded) : null,
+               backgroundColor: Colors.green,
+               foregroundColor: Colors.white,
+               label: 'Log Exercise',
+               onTap: () {
+                 ScaffoldMessenger.of(context).showSnackBar(
+                     const SnackBar(
+                         backgroundColor: Colors.green,
+                         content: Text(("Exercise logged"))));
+
+                 var id = const Uuid().v1().toString();
+                 var newEntry = widget.sessionExercise;
+                 newEntry.id = id;
+                 widget.svc.loggedExercises.add(newEntry);
+                  // update the history record attached to the ExerciseEntry and
+                  // persist it here separately
+
+               },
+             ),
+             SpeedDialChild(
+               child: !rmicons ? const Icon(Icons.pause_rounded) : null,
+               backgroundColor: Colors.deepOrange,
+               foregroundColor: Colors.white,
+               label: 'Pause Session',
+               onTap: ()  {
+                 ScaffoldMessenger.of(context).showSnackBar(
+                     const SnackBar(content: Text(("Session paused"))));
+                 widget.svc.toggleTimer();
+               },
+             ),
+             SpeedDialChild(
+               child: !rmicons ? const Icon(Icons.stop) : null,
+               backgroundColor: Colors.red,
+               foregroundColor: Colors.white,
+               label: 'Checkout',
+               visible: true,
+               onTap: () {
+
+                 ScaffoldMessenger.of(context).showSnackBar(
+                     const SnackBar(
+                         backgroundColor: Colors.red,
+                         content: Text(("Checking out ... "))));
+
+                 var id = const Uuid().v1().toString();
+                 var exEntry = ExerciseEntry(id: id, exercise: widget.sessionExercise);
+                 widget.svc.add(exEntry);
+                 widget.svc.checkOut();
+
+                 Navigator.push(
+                     context,
+                     MaterialPageRoute(
+                         builder: (context) =>
+                             Checkout(title: 'All Done', duration: widget
+                                 .sessionExercise.duration.toString(), svc:
+                             widget.svc,)
+                     ));
+               },
+               //onLongPress: () => debugPrint('THIRD CHILD LONG PRESS'),
+             ),
+           ],
+         ),
        );
    // });
   }
@@ -286,13 +436,55 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
    // currentRecommendationModel = widget.svc.getAllExercisesByPart(newValue.name);
   }
 
-  showActionMenu() {
+  logExercise() {
     // actually show the floating button menu with options
     // for logging, editing exercise and checking out of a session
-    // var newEntry = widget.sessionExercise;
-    // widget.svc.loggedExercises.add(newEntry);
 
-    widget.svc.flushSelectedExercises();
+// set up the buttons
+    Widget cancelButton = TextButton(
+      child: const Text("cancel"),
+      onPressed:  () {Navigator.of(context).pop();},
+    );
+    Widget continueButton = TextButton(
+      child: const Text("log"),
+      onPressed:  () {
+        // close dialog
+        Navigator.of(context).pop();
+
+        // save data
+        var newEntry = widget.sessionExercise;
+        widget.svc.loggedExercises.add(newEntry);
+
+        //check out of the session
+        Provider.of<SessionSvc>(context, listen: false).checkOut();
+
+        // navigate to home  ?? // should be to a Checkout page with session
+        // details
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    MyHomePage(db: widget.svc.getDb(), title: 'Spotter',)
+            ));
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Log Exercise"),
+      content: const Text("Exercise specifics here"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+
   }
 
   checkout(){
@@ -306,18 +498,22 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
    }
 
    getRepsText() {
-    return "Reps: " + _currentRepsSliderValue.toString();
+    return "Reps: " + _currentRepsSliderValue.toString()+ " times";
   }
 
    getWeightText() {
-    return "Weight: " + _currentWeightSliderValue.toString();
+    return "Weight: " + _currentWeightSliderValue.toString() + " lbs";
   }
 
    getDistanceText() {
-    return "Distance: " + _currentDistanceSliderValue.toString();
+    return "Distance: " + _currentDistanceSliderValue.toString() + " miles";
   }
 
    getDurationText() {
-    return "Duration: " + _currentDurationSliderValue.toString();
+    return "Duration: " + _currentDurationSliderValue.toString() + " minutes";
+  }
+
+  getExerciseEntry() {
+    return widget.sessionExercise;
   }
 }

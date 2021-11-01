@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:spotter/models/excercise_entry.dart';
 import 'package:spotter/models/exercise.dart';
 import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/models/session.dart';
+import 'package:spotter/widgets/sessionbar.dart';
 
 class SessionSvc extends ChangeNotifier {
   final String _dbKey = 'daily_session';
@@ -16,15 +18,24 @@ class SessionSvc extends ChangeNotifier {
   final String _dbExercisesKey = 'exercises';
   final String sessionsKey = 'sessions';
   final String _selectedExercisesKey = 'selectedExercises';
+  final String _activeSessionExistsKey = 'sessionStarted';
+  final String _selectedPartsKey = 'selectedParts';
+  var _sessionPausedKey = 'sessionPaused';
+
   late Session _session;
   var _oldSessions = [];
   var loggedExercises = <SessionExercise>[];
-  late Box<dynamic> _db;
+  late Box<dynamic> _db ;
+  late SessionBar _bar = SessionBar();
+
+
 
   SessionSvc(Box<dynamic> db){
     _session = Session();
     _db = db;
     _session.exerciseEntries = <ExerciseEntry>[];
+    _bar = SessionBar();
+
   }
 
   void add(ExerciseEntry exercise) {
@@ -79,7 +90,7 @@ class SessionSvc extends ChangeNotifier {
 
     var workout = rec?.workout;
     List<Part> partList = [];
-    var woList = workout?.toList();
+    var woList = workout?.toList() ?? [];
     var l = [];
     for(var i = 0; i< Part.values.length; i++) {
       var p = Part.values[i];
@@ -130,6 +141,12 @@ class SessionSvc extends ChangeNotifier {
     return _db;
   }
 
+  closeDb(){
+    if(_db.isOpen) {
+      _db.close();
+    }
+  }
+
   getLastLoggedSessionForEquipment(name){
     if(_db.containsKey(name)){
       return _db.get(name);
@@ -143,9 +160,16 @@ class SessionSvc extends ChangeNotifier {
     }
   }
 
-  checkIn(){}
+  checkIn(){
+   // if(_db.containsKey(_sessionStartedKey)){
+      _db.put(_activeSessionExistsKey, true);
+  //  }
+  }
 
-  checkOut(){}
+  checkOut(){
+    _db.put(_activeSessionExistsKey, false);
+    flushSelectedExercises();
+  }
 
   void saveSelectedExercises(List<dynamic> selectedExercises) {
     _db.put(_selectedExercisesKey, selectedExercises);
@@ -162,5 +186,35 @@ class SessionSvc extends ChangeNotifier {
     if(_db.containsKey(_selectedExercisesKey)) {
       _db.delete(_selectedExercisesKey);
     }
+  }
+
+  void saveSelectedParts(List<dynamic> selectedParts) {
+    _db.put(_selectedPartsKey, selectedParts);
+  }
+
+  List<dynamic> getSelectedParts() {
+    if(_db.containsKey(_selectedPartsKey)) {
+      return _db.get(_selectedPartsKey);
+    }
+    return <dynamic>[];
+  }
+
+  bool activeSessionExists() {
+    return _db.get(_activeSessionExistsKey) == true;
+  }
+
+  @override
+  void dispose() {
+    checkOut();
+    super.dispose();
+  }
+
+  SessionBar getSessionBar() {
+   return _bar;
+  }
+
+  toggleTimer(){
+    return _db.put(_sessionPausedKey, !_db.get(_sessionPausedKey, defaultValue:
+        false)) ;
   }
 }

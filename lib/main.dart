@@ -5,18 +5,23 @@ import 'package:provider/provider.dart';
 import 'package:spotter/enums/equipment.dart';
 import 'package:spotter/models/excercise_entry.dart';
 import 'package:spotter/models/session_exercise.dart';
-import 'package:spotter/screens/today.dart';
+import 'package:spotter/screens/parts.dart';
+import 'package:spotter/screens/exercises.dart';
 import 'package:hive/hive.dart';
+import 'package:spotter/screens/schedule.dart';
 import 'package:spotter/services/exercise_loader_svc.dart';
 import 'package:spotter/services/session_svc.dart';
+import 'package:spotter/widgets/sessionbar.dart';
 import 'package:spotter/widgets/topbar.dart';
 import 'enums/part.dart';
 import 'models/exercise.dart';
 import 'models/history.dart';
+import 'screens/session.dart';
 import 'models/recommendation.dart';
-import 'models/session.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
+
+import 'models/session.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -44,13 +49,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SessionSvc(database))
+        ChangeNotifierProvider(create: (_) => SessionSvc(database)),
+        ChangeNotifierProvider(create: (_) => ExerciseLoader(database))
       ],
       child: MaterialApp(
 
           theme: ThemeData(
               appBarTheme: const AppBarTheme(
-                color: Colors.white,
+                color: Colors.green,
               )),
           home: MyHomePage(title: 'NO DAYS OFF !!', db:
       database)),
@@ -83,9 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
        appBar: TopBar(
          onTitleTapped: (){},
-         title: widget.title,
+         title: 'Spotter',
          onPressed: (){},
          child: const Icon(Icons.home),
+         svc: _sSvc,
        ),
       // AppBar(
       //   // Here we take the value from the MyHomePage object that was created by
@@ -107,23 +114,82 @@ class _MyHomePageState extends State<MyHomePage> {
               ), onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TodaysWorkout(parts:
-                parts, svc: _sSvc)),
+                MaterialPageRoute(builder: (context) => Parts
+                  ( _sSvc, 'Parts')),
               );
             }, child: const Text(
-              "CHECK IN",
+              "Parts",
               style:  TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 28
               ),
             ),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+
+                backgroundColor: MaterialStateProperty.all<Color>(Colors
+                    .white),
+              ), onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Exercises(parts:
+                parts, svc: _sSvc)),
+              );
+            }, child: const Text(
+              "Exercises",
+              style:  TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 28
+              ),
+            ),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors
+                    .white),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>
+                       Schedule(title: 'Schedule', svc: _sSvc)),
+                );
+              },
+              child: const Text(
+              "Schedule",
+              style:  TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 28
+              ),
+            ),
+            ),
+            _sSvc.activeSessionExists() ?
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors
+                    .white),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>
+                      WorkoutSession(parseSelectedParts(_sSvc
+                          .getSelectedParts())
+                     ,
+                      'Schedule',  _sSvc, _sSvc
+                          .getSelectedExercises())),
+                );
+              },
+              child: const Text(
+                "Session",
+                style:  TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 28
+                ),
+              ),
             )
+            : const Text(''),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
+     // bottomSheet: _sSvc.getSessionBar() ,
     );
+  }
+
+  List<Part> parseSelectedParts(List<dynamic> selectedParts) {
+    return selectedParts.cast<Part>();
   }
 }
