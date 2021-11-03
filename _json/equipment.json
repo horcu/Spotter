@@ -1,0 +1,59 @@
+{
+  "equipment": [
+    {
+      "id": "0",
+      "name":  "barbell",
+      "icon":  "barbell"
+    },
+    {
+      "id": "1",
+      "name":  "dumbell",
+      "icon":  "dumbell"
+    },
+    {
+      "id": "2",
+      "name":  "cable",
+      "icon":  "cable"
+    },
+    {
+      "id": "3",
+      "name":  "machine",
+      "icon":  "machine"
+    },
+    {
+      "id": "4",
+      "name":  "rope",
+      "icon":  "rope"
+    },
+    {
+      "id": "5",
+      "name":  "plate",
+      "icon":  "plate"
+    },
+    {
+      "id": "6",
+      "name":  "elliptical",
+      "icon":  "elliptical"
+    },
+    {
+      "id": "7",
+      "name":  "treadmill",
+      "icon":  "treadmill"
+    },
+    {
+      "id": "8",
+      "name":  "none",
+      "icon":  "none"
+    },
+    {
+      "id": "9",
+      "name": "outdoor",
+      "icon": "outdoor"
+    },
+    {
+      "id": "10",
+      "name": "none",
+      "icon": "none"
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
 
-part 'part.g.dart';
+part 'partenum.g.dart';
 
 @HiveType(typeId: 10)
-enum Part {
+enum PartEnum {
 @HiveField(0)
   chest,
 @HiveField(1)
@@ -24,25 +24,25 @@ shoulder,
   none
 }
 
-extension PartExtension on Part {
+extension PartExtension on PartEnum {
 
   String get name {
     switch (this) {
-      case Part.chest:
+      case PartEnum.chest:
         return 'Chest';
-      case Part.back:
+      case PartEnum.back:
         return 'Back';
-      case Part.arm:
+      case PartEnum.arm:
         return 'Arm';
-      case Part.core:
+      case PartEnum.core:
         return 'Core';
-      case Part.leg:
+      case PartEnum.leg:
         return 'Leg';
-      case Part.glute:
+      case PartEnum.glute:
         return 'Glute';
-      case Part.shoulder:
+      case PartEnum.shoulder:
         return 'Shoulder';
-      case Part.cardio:
+      case PartEnum.cardio:
         return 'Cardio';
       default:
         return 'None';

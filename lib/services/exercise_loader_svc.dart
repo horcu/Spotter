@@ -4,17 +4,33 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
+import 'package:spotter/models/equipment.dart';
 import 'package:spotter/models/exercise.dart';
+import 'package:spotter/models/part.dart';
 import 'package:spotter/models/recommendation.dart';
 import 'package:uuid/uuid.dart';
 
 class ExerciseLoader extends ChangeNotifier {
 
   final String _dbExercisesKey = 'exercises';
-  final String _dbRecommendationsKey = 'schedule';
+  final String _dbScheduleKey = 'schedule';
+  final String _dbPartsKey = 'parts';
+  final String _dbEquipmentKey = 'equipment';
+  final String _dbSessionsKey = 'sessions';
+  final String _selectedExercisesKey = 'selectedExercises';
+  final String _activeSessionExistsKey = 'sessionStarted';
+  final String _currentSessionMillis = 'sessionMillis';
+  final String _selectedPartsKey = 'selectedParts';
+  final String _sessionPausedKey = 'sessionPaused';
+
   late Box _db;
   var exList;
   var recommendations;
+  var parts;
+  var equipment;
+
+
+
 
   ExerciseLoader(Box<dynamic> db){
     _db = db;
@@ -22,8 +38,11 @@ class ExerciseLoader extends ChangeNotifier {
 
   seedDb() async {
     try {
+      deleteAllFromDb();
       loadExercisesFromJson();
       loadRecommendationsFromJson();
+      loadPartsFromJson();
+      loadEquipmentFromJson();
 
     } catch (e) {
       print(e);
@@ -46,6 +65,18 @@ class ExerciseLoader extends ChangeNotifier {
         .then((value) => saveRecommendationToDb());
   }
 
+  loadPartsFromJson() {
+    return getPartsFromJsonList()
+        .then((value) => parts = value)
+        .then((value) => savePartsToDb());
+  }
+
+  loadEquipmentFromJson() {
+    return getEquipmentFromJsonList()
+        .then((value) => equipment = value)
+        .then((value) => saveEquipmentToDb());
+  }
+
   saveExercisesToDb(){
   // if(!_db.containsKey(_dbExercisesKey)) {
       _db.put(_dbExercisesKey, exList);
@@ -54,9 +85,23 @@ class ExerciseLoader extends ChangeNotifier {
 
   saveRecommendationToDb(){
   // if(!_db.containsKey(_dbRecommendationsKey)){
-      _db.put(_dbRecommendationsKey, recommendations);
+      _db.put(_dbScheduleKey, recommendations);
  //  }
   }
+
+  savePartsToDb() {
+    // if(!_db.containsKey(_dbPartsKey)){
+    _db.put(_dbPartsKey, parts);
+    //  }
+  }
+
+  saveEquipmentToDb(){
+    // if(!_db.containsKey(_dbEquipmentKey)){
+    _db.put(_dbEquipmentKey, equipment);
+    //  }
+  }
+
+
 
   Future getExercisesFromJsonList() async {
     final String response = await rootBundle.loadString('_json/exercises.json');
@@ -70,8 +115,31 @@ class ExerciseLoader extends ChangeNotifier {
         .toList();
   }
 
+  Future getEquipmentFromJsonList() async {
+    final String response = await rootBundle.loadString('_json/equipment.json');
+    return await json.decode(response)["equipment"].map((data) => Equipment.fromJson(data))
+        .toList();
+  }
+
+  Future getPartsFromJsonList() async {
+    final String response = await rootBundle.loadString('_json/equipment.json');
+    return await json.decode(response)["parts"].map((data) => Part.fromJson(data))
+        .toList();
+  }
   assignId(li) {
     li.id = const Uuid().v1();
   }
 
+  void deleteAllFromDb() {
+    _db.delete(_dbExercisesKey);
+    _db.delete(_dbEquipmentKey);
+    _db.delete(_dbPartsKey);
+    _db.delete(_dbScheduleKey);
+    _db.delete(_dbSessionsKey);
+    _db.delete(_selectedExercisesKey);
+    _db.delete(_activeSessionExistsKey);
+    _db.delete(_currentSessionMillis);
+    _db.delete(_selectedExercisesKey);
+    _db.delete(_sessionPausedKey);
+  }
 }

@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
 
-part "equipment.g.dart";
+part "equipmentenum.g.dart";
 
 @HiveType(typeId: 9)
-enum Equipment {
+enum EquipmentEnum {
   @HiveField(0)
   machine,
   @HiveField(1)
@@ -15,7 +15,7 @@ enum Equipment {
   @HiveField(4)
   treadmill,
   @HiveField(5)
-  eliptical,
+  elliptical,
   @HiveField(6)
   ball,
   @HiveField(7)
@@ -28,28 +28,28 @@ enum Equipment {
 outdoor
 }
 
-extension EquipmentExtension on Equipment {
+extension EquipmentExtension on EquipmentEnum {
   String get name {
     switch (this) {
-      case Equipment.barbell:
+      case EquipmentEnum.barbell:
         return 'Barbell';
-      case Equipment.cable:
+      case EquipmentEnum.cable:
         return 'Cable';
-      case Equipment.dumbell:
+      case EquipmentEnum.dumbell:
         return 'Dumbell';
-      case Equipment.eliptical:
-        return 'Eliptical';
-      case Equipment.machine:
+      case EquipmentEnum.elliptical:
+        return 'Elliptical';
+      case EquipmentEnum.machine:
         return 'Machine';
-      case Equipment.treadmill:
+      case EquipmentEnum.treadmill:
         return 'Treadmill';
-      case Equipment.ball:
+      case EquipmentEnum.ball:
         return 'Ball';
-      case Equipment.rope:
+      case EquipmentEnum.rope:
         return 'Rope';
-      case Equipment.plate:
+      case EquipmentEnum.plate:
         return 'Plate';
-      case Equipment.outdoor:
+      case EquipmentEnum.outdoor:
         return 'Outdoor';
       default:
         return 'None';

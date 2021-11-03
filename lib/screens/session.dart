@@ -2,9 +2,10 @@
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:spotter/enums/equipment.dart';
-import 'package:spotter/enums/part.dart';
+import 'package:spotter/enums/equipmentenum.dart';
+import 'package:spotter/enums/partenum.dart';
 import 'package:spotter/models/exercise.dart';
+import 'package:spotter/models/part.dart';
 import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/screens/exercises.dart';
 import 'package:spotter/services/session_svc.dart';
@@ -26,7 +27,7 @@ class WorkoutSession extends StatefulWidget {
 }
 
 class _WorkoutSessionState extends State<WorkoutSession> {
-  Equipment selectedEquipment = Equipment.none;
+  EquipmentEnum selectedEquipment = EquipmentEnum.none;
 
   int currentIndex = 0;
 
@@ -87,9 +88,12 @@ class _WorkoutSessionState extends State<WorkoutSession> {
 
   createPage(position, List<dynamic> exercises) {
     var exercise = exercises[position];
-    var part =  widget.parts.firstWhereOrNull((element) => element.name
+    var partEnum =  widget.parts.firstWhereOrNull((element) => element.name
         .toLowerCase() == exercise.part);
+    var part = widget.svc.parts.firstWhere((element) => element.name == partEnum?.name);
+
     var equipment = exercise.equipment;
+
     var id = const Uuid().v1().toString();
     var history = exercise.history ?? {};
 
@@ -104,12 +108,12 @@ class _WorkoutSessionState extends State<WorkoutSession> {
         0,
         true,
         equipment,
-        part ?? Part.none,
+        part,
         0,
         0,
         0,
         0,
-        history,'');
+        history, '');
 
     // pass in the last exercise similar to this new one
     // changes will then be made to it to save the next

@@ -1,7 +1,7 @@
 
 import 'package:hive/hive.dart';
-import 'package:spotter/enums/equipment.dart';
-import 'package:spotter/enums/part.dart';
+import 'package:spotter/models/equipment.dart';
+import 'package:spotter/models/part.dart';
 
 part 'session_exercise.g.dart';
 
@@ -26,9 +26,9 @@ class SessionExercise {
   @HiveField(8)
   bool  increased;
   @HiveField(9)
-  final List<dynamic> equipment;
+  List<Equipment> equipment;
   @HiveField(10)
-  final Part part;
+  Part part;
   @HiveField(11)
   int duration;
   @HiveField(12)
@@ -38,10 +38,9 @@ class SessionExercise {
   @HiveField(14)
   double lastDistance;
   @HiveField(15)
-  final List<dynamic>? history;
+  List<dynamic>? history;
   @HiveField(16)
   String equipmentUsed;
-
 
   SessionExercise(
       this.id,
@@ -60,6 +59,7 @@ class SessionExercise {
       this.distance,
       this.lastDistance,
       this.history,
-      this.equipmentUsed);
+      this.equipmentUsed
+      );
 
 }

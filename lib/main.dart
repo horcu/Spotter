@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:spotter/enums/equipment.dart';
+import 'package:spotter/enums/equipmentenum.dart';
+import 'package:spotter/models/equipment.dart';
+import 'package:spotter/models/part.dart';
 import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/screens/history_timeline.dart';
 import 'package:spotter/screens/parts.dart';
@@ -11,7 +13,7 @@ import 'package:spotter/screens/schedule.dart';
 import 'package:spotter/services/exercise_loader_svc.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:spotter/widgets/topbar.dart';
-import 'enums/part.dart';
+import 'enums/partenum.dart';
 import 'models/exercise.dart';
 import 'models/history.dart';
 import 'screens/session.dart';
@@ -25,8 +27,10 @@ Future<void> main() async {
   Hive.registerAdapter(RecommendationAdapter());
   Hive.registerAdapter(SessionAdapter());
   Hive.registerAdapter(SessionExerciseAdapter());
-  Hive.registerAdapter(EquipmentAdapter());
+  Hive.registerAdapter(EquipmentEnumAdapter());
+  Hive.registerAdapter(PartEnumAdapter());
   Hive.registerAdapter(PartAdapter());
+  Hive.registerAdapter(EquipmentAdapter());
   Hive.registerAdapter(HistoryAdapter());
 
   final Box<dynamic> db = await Hive.openBox('spotter_v1');
@@ -76,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // get the session service to use for the new session
     var _sSvc = SessionSvc(widget.db);
-    List<Part> parts = _sSvc.getRecommendedWorkoutPartForTheDay();
+    List<PartEnum> parts = _sSvc.getRecommendedWorkoutPartForTheDay();
     // var exercises = _sSvc.getAllExercisesByPart(Part.chest.name);
 
     return Scaffold(
@@ -92,14 +96,14 @@ class _MyHomePageState extends State<MyHomePage> {
         //   // the App.build method, and use it to set our appbar title.
         //   title: Text(widget.title),
         // ),
-        body: GridView.count(
+        body:  GridView.count(
             // Create a grid with 2 columns. If you change the scrollDirection to
             // horizontal, this produces 2 rows.
             crossAxisCount: 2,
             // Generate 100 widgets that display their index in the List.
             children: List.generate(5, (index) {
               return Center(
-                  child: getGridItem(index, parts, _sSvc));
+                 child: getGridItem(index, parts, _sSvc));
             })));
   }
 

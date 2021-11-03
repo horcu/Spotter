@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:hive/hive.dart';
-import 'package:spotter/enums/part.dart';
+import 'package:spotter/enums/partenum.dart';
+import 'package:spotter/models/equipment.dart';
 import 'package:spotter/models/exercise.dart';
+import 'package:spotter/models/part.dart';
 import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/models/session.dart';
 
 class SessionSvc extends ChangeNotifier {
-  final String _dbKey = 'daily_session';
   final String _dbPartRecommendationKey = 'recommendations';
   final String _dbExercisesKey = 'exercises';
   final String sessionsKey = 'sessions';
@@ -16,6 +17,8 @@ class SessionSvc extends ChangeNotifier {
   final String _currentSessionMillis = 'sessionMillis';
   final String _selectedPartsKey = 'selectedParts';
   final String _sessionPausedKey = 'sessionPaused';
+  final String _dbPartsKey = 'parts';
+  final String _dbEquipmentKey = 'equipment';
 
   late Session _session;
   var _oldSessions = [];
@@ -29,7 +32,7 @@ class SessionSvc extends ChangeNotifier {
   SessionSvc(Box<dynamic> db){
     _session = Session();
     _db = db;
-    _session.exerciseEntries = [];
+    _session.exercises = [];
 
     // testing
      //_delete(sessionsKey);
@@ -40,20 +43,20 @@ class SessionSvc extends ChangeNotifier {
   bool get timerHasNotStarted => _timerNotStarted;
 
   void add(SessionExercise exercise) {
-    _session.exerciseEntries.add(exercise);
+    _session.exercises.add(exercise);
   }
 
   void remove(SessionExercise exercise) {
-    if(_session.exerciseEntries.contains(exercise)) {
-      _session.exerciseEntries.remove(exercise);
+    if(_session.exercises.contains(exercise)) {
+      _session.exercises.remove(exercise);
     }
   }
 
   void replace(String exerciseId, SessionExercise newExercise) {
-    var ex = _session.exerciseEntries.firstWhereOrNull((element) => element.id ==
+    var ex = _session.exercises.firstWhereOrNull((element) => element.id ==
         exerciseId);
     if(ex != null) {
-      _session.exerciseEntries.add(newExercise);
+      _session.exercises.add(newExercise);
     }
   }
 
@@ -76,7 +79,7 @@ class SessionSvc extends ChangeNotifier {
      // });
 
       // save the session to the existing list
-    _session.exerciseEntries = loggedExercises;
+    _session.exercises = loggedExercises;
       sessions.add(_session);
 
       // save the list with the new session added
@@ -102,11 +105,11 @@ class SessionSvc extends ChangeNotifier {
         .firstWhereOrNull((r) => r.day == day);
 
     var workout = rec?.workout;
-    List<Part> partList = [];
+    List<PartEnum> partList = [];
     var woList = workout?.toList() ?? [];
     var l = [];
-    for(var i = 0; i< Part.values.length; i++) {
-      var p = Part.values[i];
+    for(var i = 0; i< PartEnum.values.length; i++) {
+      var p = PartEnum.values[i];
       var n = p.name;
       if(woList.contains(n.toLowerCase())){
         partList.add(p);
@@ -245,5 +248,20 @@ class SessionSvc extends ChangeNotifier {
   List<Session> getHistoricalTimeline() {
     var result = _db.get(sessionsKey);
     return result?.cast<Session>() ?? <Session>[];
+  }
+
+  List<Part> get parts{
+    return _db.get(_dbPartsKey) ?? <Part>[];
+  }
+  List<Equipment> get  equipment{
+    return _db.get(_dbEquipmentKey) ?? <Equipment>[];
+  }
+
+  getPartIcon(String partName) {
+    return parts.firstWhere((element) => element.name == partName);
+  }
+
+  getEquipmentIcon(String ename) {
+    return equipment.firstWhere((element) => element.name == ename);
   }
 }

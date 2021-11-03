@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spotter/enums/part.dart';
+import 'package:spotter/enums/partenum.dart';
 import 'package:spotter/models/exercise.dart';
+import 'package:spotter/models/part.dart';
 import 'package:spotter/screens/session.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:spotter/services/session_svc.dart';

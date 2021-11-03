@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
-import 'package:spotter/enums/equipment.dart';
-import 'package:spotter/enums/part.dart';
+import 'package:spotter/enums/equipmentenum.dart';
+import 'package:spotter/enums/partenum.dart';
 import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/screens/checkout.dart';
 import 'package:spotter/services/session_svc.dart';
@@ -20,7 +20,7 @@ class WorkoutDetailsStatefulWidget extends StatefulWidget {
   var weightDropdownValue;
   var repDropdownValue;
   SessionExercise sessionExercise;
-  Equipment? equipmentType = Equipment.none;
+  EquipmentEnum? equipmentType = EquipmentEnum.none;
 
   @override
   State<WorkoutDetailsStatefulWidget> createState() => Workoutdetails();
@@ -53,7 +53,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
        _start = 0;
      }
 
-    void startTimer(int timerDuration) {
+     void startTimer(int timerDuration) {
 
        _timer?.cancel();
       setState(() {
@@ -447,7 +447,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                      .lastRep
                      : newEntry.rep;
 
-                 newEntry.equipmentUsed = newEntry.equipment[selectedEquipmentIndex];
+                 newEntry.equipmentUsed = newEntry.equipment[selectedEquipmentIndex].name;
 
                  widget.svc.loggedExercises.add(newEntry);
 

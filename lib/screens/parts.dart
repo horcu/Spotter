@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:spotter/enums/part.dart';
+import 'package:spotter/enums/partenum.dart';
+import 'package:spotter/models/part.dart';
 import 'package:spotter/screens/exercises.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:spotter/widgets/topbar.dart';
@@ -41,9 +42,9 @@ class _partState extends State<Parts> {
         svc: widget.svc,
       ),
       body: ListView.builder(
-          itemCount: Part.values.toList().length,
+          itemCount: widget.svc.parts.length,
           itemBuilder: (context, index) {
-            var selected = Part.values.toList()[index];
+            var selected = widget.svc.parts[index];
             var isSelected = widget.allPartIds.contains(selected.name);
             return Card(
                 child: ListTile(

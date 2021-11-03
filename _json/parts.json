@@ -1,0 +1,52 @@
+{
+  "parts": [
+    {
+      "id": "0",
+      "name": "arm",
+      "icon": "arm",
+      "color": "#888888"
+    },
+    {
+      "id": "1",
+      "name": "leg",
+      "icon": "leg",
+      "color": "#888888"
+    },
+    {
+      "id": "2",
+      "name": "back",
+      "icon": "back",
+      "color": "#888888"
+    },
+    {
+      "id": "3",
+      "name": "core",
+      "icon": "core",
+      "color": "#888888"
+    },
+    {
+      "id": "4",
+      "name": "glute",
+      "icon": "glute",
+      "color": "#888888"
+    },
+    {
+      "id": "5",
+      "name": "cardio",
+      "icon": "cardio",
+      "color": "#888888"
+    },
+    {
+      "id": "6",
+      "name": "shoulder",
+      "icon": "shoulder",
+      "color": "#888888"
+    },
+    {
+      "id": "7",
+      "name": "none",
+      "icon": "none",
+      "color": "#888888"
+    }
+  ]
+}

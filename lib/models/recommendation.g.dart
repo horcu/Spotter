@@ -17,18 +17,21 @@ class RecommendationAdapter extends TypeAdapter<Recommendation> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Recommendation(
-      day: fields[0] as String,
-      workout: (fields[1] as List).cast<dynamic>(),
+      id: fields[0] as String,
+      day: fields[1] as String,
+      workout: (fields[2] as List).cast<dynamic>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Recommendation obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.day)
+      ..write(obj.id)
       ..writeByte(1)
+      ..write(obj.day)
+      ..writeByte(2)
       ..write(obj.workout);
   }
 

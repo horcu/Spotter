@@ -26,7 +26,7 @@ class SessionExerciseAdapter extends TypeAdapter<SessionExercise> {
       fields[6] as DateTime,
       fields[7] as int,
       fields[8] as bool,
-      (fields[9] as List).cast<dynamic>(),
+      (fields[9] as List).cast<Equipment>(),
       fields[10] as Part,
       fields[11] as int,
       fields[12] as int,

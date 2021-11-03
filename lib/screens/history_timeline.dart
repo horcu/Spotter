@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spotter/models/session.dart';
+import 'package:spotter/presentation/spotter_icons.dart';
+import 'package:spotter/presentation/parts_icons.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:spotter/widgets/topbar.dart';
 import 'package:timelines/timelines.dart';
@@ -57,7 +59,6 @@ class _State extends State<HistoryTimeline> {
   }
 
   getExercisesForSession(Session session) {
-
     return [
       Row(
       children: [
@@ -72,8 +73,7 @@ class _State extends State<HistoryTimeline> {
       ]),
       Row(
         children: const [
-          Spacer(flex: 10,),
-          Spacer(flex: 1,),
+          Spacer(flex: 11,)
             ]
 
       ),
@@ -88,26 +88,25 @@ class _State extends State<HistoryTimeline> {
           height: 50,
           child: ListView.builder(
             reverse: true,
-              itemCount: session.exerciseEntries.length,
+              itemCount: session.exercises.length,
               itemBuilder: (context, index) {
                 return Row(
                   children: [
-                    Text(session.exerciseEntries[index].part.name.substring
-                      (0,3), style:
-                const TextStyle(fontSize: 10)),
+                    Icon(getIcon(session.exercises[index].equipmentUsed), size: 12, color: Colors
+                    .black45,),
                     const Spacer(flex: 1,),
-                    const Icon(Icons.circle_rounded, size: 10, color: Colors
-                        .grey,),
+                    const Icon(Spotter.dumbell2, size: 12, color: Colors
+                        .black45,),
                     const Spacer(flex: 1,),
-                    Text(session.exerciseEntries[index].name, style:
+                    Text(session.exercises[index].name, style:
                      const TextStyle(fontSize: 10),),
                     const Spacer(flex: 200,),
-                    Text(session.exerciseEntries[index].weight.toString(),
+                    Text(session.exercises[index].weight.toString(),
                         style: const TextStyle(color: Colors.black87,
                             fontSize: 10)),
                     const Spacer(flex: 1,),
                     const Text('|', style:  TextStyle(color: Colors.black87,fontSize: 8)),
-                    Text(double.parse(session.exerciseEntries[index].rep)
+                    Text(double.parse(session.exercises[index].rep)
                         .toInt().toString(), style: const TextStyle(color:
                     Colors.black87, fontSize: 10)),
                     const Spacer(flex: 1,)
@@ -116,5 +115,9 @@ class _State extends State<HistoryTimeline> {
               })
       )
     ];
+  }
+
+  IconData? getIcon(String name) {
+    return Parts().getByName(name);
   }
 }
