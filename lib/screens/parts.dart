@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:spotter/enums/part.dart';
-import 'package:spotter/models/exercise.dart';
 import 'package:spotter/screens/exercises.dart';
-import 'package:spotter/screens/session.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:spotter/widgets/topbar.dart';
 

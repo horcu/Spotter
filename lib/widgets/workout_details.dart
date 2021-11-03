@@ -1,12 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 import 'package:spotter/enums/equipment.dart';
 import 'package:spotter/enums/part.dart';
-import 'package:spotter/models/excercise_entry.dart';
-import 'package:spotter/models/history.dart';
 import 'package:spotter/models/session_exercise.dart';
-import 'package:spotter/models/session.dart';
 import 'package:spotter/screens/checkout.dart';
 import 'package:spotter/services/session_svc.dart';
 import 'package:uuid/uuid.dart';
@@ -21,7 +19,6 @@ class WorkoutDetailsStatefulWidget extends StatefulWidget {
   String title;
   var weightDropdownValue;
   var repDropdownValue;
-  var exerciseDuration = 0;
   SessionExercise sessionExercise;
   Equipment? equipmentType = Equipment.none;
 
@@ -30,19 +27,71 @@ class WorkoutDetailsStatefulWidget extends StatefulWidget {
 }
 
 class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
-  var currentRecommendationModel = {};
-  int selectedIndex = 0;
+  int selectedEquipmentIndex = 0;
+  int selectedPartIndex = 0;
 
   var _currentDistanceSliderValue = 0.0;
   var _currentDurationSliderValue = 0.0;
   var _currentRepsSliderValue = 0.0;
-
   var _currentWeightSliderValue = 0.0;
+
   bool hasNotLoadedDefaults = true;
+  var displayTime = 0;
+  int _start = 0;
+
+  static Timer? _timer;
+
+  var isTimerPaused = false;
+  int exerciseDuration = 0;
 
   @override
   Widget build(BuildContext context) {
+
    // return Consumer<Session>(builder: (context, session, child) {
+
+     if(widget.svc.timerHasNotStarted) {
+       _start = 0;
+     }
+
+    void startTimer(int timerDuration) {
+
+       _timer?.cancel();
+      setState(() {
+        _start = timerDuration;
+      });
+      const oneSec = Duration(seconds: 1);
+      _timer = Timer.periodic(
+        oneSec,
+            (Timer timer) => setState(
+              () {
+            if (_start < 0) {
+              timer.cancel();
+            } else {
+              if(widget.svc.timerPaused == false) {
+                _start = _start + 1;
+                exerciseDuration = _start;
+              }else {
+                //paused//
+              }
+            }
+          },
+        ),
+      );
+
+    }
+
+    void pauseTimer() {
+        _timer?.cancel();
+
+    }
+
+    void unpauseTimer() => startTimer(_start);
+
+    @override
+    void dispose() {
+      _timer?.cancel();
+      super.dispose();
+    }
 
     var isDialOpen = ValueNotifier<bool>(false);
     var customDialRoot = false;
@@ -53,6 +102,7 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
     var visible = true;
     var rmicons = false;
 
+
     List<String> doubleList = List<String>.generate(25, (int index) => '${index * 5 + 1}');
     List<DropdownMenuItem> menuItemList = doubleList.map((val) => DropdownMenuItem(value: val, child: Text(val))).toList();
     var exName = widget.sessionExercise.part.name.toString().toLowerCase();
@@ -60,22 +110,22 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
     var history = widget.sessionExercise.history;
     // set the default settings
     if(history != null && history.isNotEmpty && hasNotLoadedDefaults) {
-      var svd = history[selectedIndex]['duration'].toString();
+      var svd = history[selectedEquipmentIndex]['duration'].toString();
       var parsed = svd != '' ? int.parse(svd) : 0;
       var converted = convertTime(parsed) ?? 0;
       _currentDurationSliderValue = converted.toDouble();
       widget.sessionExercise.lastDuration = converted;
 
-      var dist  = history[selectedIndex]['distance'].toString();
+      var dist  = history[selectedEquipmentIndex]['distance'].toString();
       _currentDistanceSliderValue = dist != '' ? double.parse(dist) : 0.0;
       widget.sessionExercise.lastDistance = dist != '' ? double.parse(dist) : 0.0;
 
-      var rep = history[selectedIndex]['rep'].toString();
+      var rep = history[selectedEquipmentIndex]['rep'].toString();
       _currentRepsSliderValue = rep != '' ? double.parse(rep) : 0.0;
       widget.sessionExercise.lastRep = rep != '' ? double.parse(rep).toString()
           : '0.0';
 
-      var weight = history[selectedIndex]['weight'].toString();
+      var weight = history[selectedEquipmentIndex]['weight'].toString();
       _currentWeightSliderValue = weight != '' ? double.parse(weight) : 0.0;
       widget.sessionExercise.lastWeight = weight != '' ? int.parse(weight) : 0;
 
@@ -120,11 +170,11 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
           }),
           onPressed: (int index) {
             setState(() {
-              selectedIndex = index;
+              selectedEquipmentIndex = index;
               hasNotLoadedDefaults = true;
             });
           },
-          isSelected: List<bool>.generate(widget.sessionExercise.equipment.length, (index) { return selectedIndex == index;}),
+          isSelected: List<bool>.generate(widget.sessionExercise.equipment.length, (index) { return selectedEquipmentIndex == index;}),
         ),
          const Spacer(flex: 1),
          if (exName == 'cardio')
@@ -380,21 +430,69 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
                  var id = const Uuid().v1().toString();
                  var newEntry = widget.sessionExercise;
                  newEntry.id = id;
+                 newEntry.duration = exerciseDuration;
+
+                 newEntry.weight = newEntry.weight == 0 ? newEntry.lastWeight
+                : newEntry.weight;
+
+                 newEntry.duration = newEntry.duration == 0 ? newEntry
+                     .lastDuration
+                     : _start;
+
+                 newEntry.distance = newEntry.distance == 0.0 ? newEntry
+                     .lastDistance
+                     : newEntry.distance;
+
+                 newEntry.rep = newEntry.rep == '0' ? newEntry
+                     .lastRep
+                     : newEntry.rep;
+
+                 newEntry.equipmentUsed = newEntry.equipment[selectedEquipmentIndex];
+
                  widget.svc.loggedExercises.add(newEntry);
-                  // update the history record attached to the ExerciseEntry and
-                  // persist it here separately
 
                },
              ),
              SpeedDialChild(
-               child: !rmicons ? const Icon(Icons.pause_rounded) : null,
+               child: widget.svc.timerHasNotStarted ? const Icon(Icons
+        .play_arrow_rounded): isTimerPaused ? const Icon(Icons
+                   .play_arrow_rounded) :  const Icon(Icons
+                   .pause_circle_rounded) ,
                backgroundColor: Colors.deepOrange,
                foregroundColor: Colors.white,
-               label: 'Pause Session',
+               label: widget.svc.timerHasNotStarted  ? 'Start Session' :
+            isTimerPaused ?
+             'Resume Session' : 'Pause '
+                   'Session',
                onTap: ()  {
                  ScaffoldMessenger.of(context).showSnackBar(
-                     const SnackBar(content: Text(("Session paused"))));
-                 widget.svc.toggleTimer();
+                      SnackBar( backgroundColor: Colors.green, content: Text
+                        (widget.svc.timerHasNotStarted ?
+                      'Starting session ...' :
+                         isTimerPaused
+                         ? "Starting session ..."
+                         : "Pausing session ...")));
+
+                 if(widget.svc.timerHasNotStarted) {
+                   widget.svc.startTimer();
+                   startTimer(0);
+                 } else if (!widget.svc.timerHasNotStarted) {
+                   if(isTimerPaused){
+                     widget.svc.unpauseTimer();
+                     unpauseTimer();
+                     setState(() {
+                       isTimerPaused = false;
+                     });
+
+                   } else {
+                     pauseTimer();
+                     widget.svc.pauseTimer();
+                     setState(() {
+                       isTimerPaused = true;
+                     });
+
+                   }
+                 }
                },
              ),
              SpeedDialChild(
@@ -407,20 +505,17 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
 
                  ScaffoldMessenger.of(context).showSnackBar(
                      const SnackBar(
-                         backgroundColor: Colors.red,
+                         backgroundColor: Colors.green,
                          content: Text(("Checking out ... "))));
 
-                 var id = const Uuid().v1().toString();
-                 var exEntry = ExerciseEntry(id: id, exercise: widget.sessionExercise);
-                 widget.svc.add(exEntry);
+                 // save all logged exercises to db
+                 widget.svc.save();
                  widget.svc.checkOut();
-
                  Navigator.push(
                      context,
                      MaterialPageRoute(
                          builder: (context) =>
-                             Checkout(title: 'All Done', duration: widget
-                                 .sessionExercise.duration.toString(), svc:
+                             Checkout(title: 'All Done', duration: getElapsedTime(), svc:
                              widget.svc,)
                      ));
                },
@@ -428,13 +523,29 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
              ),
            ],
          ),
+         bottomSheet:  SizedBox(
+                 height: 40,
+                 width: 140,
+                 child: Column(
+                   children:  <Widget>[
+                     Padding(
+                       padding: const EdgeInsets.all(0),
+                       child: Text(getElapsedTime(),
+                         style: const TextStyle(
+                             fontSize: 12,
+                             fontFamily: 'Helvetica',
+                             fontWeight: FontWeight.bold
+                         ),
+                       ),
+                     ),
+                   ],
+                 )
+         ),
        );
    // });
   }
 
-  void getEquipmentHistory(Equipment newValue) {
-   // currentRecommendationModel = widget.svc.getAllExercisesByPart(newValue.name);
-  }
+
 
   logExercise() {
     // actually show the floating button menu with options
@@ -515,5 +626,20 @@ class Workoutdetails extends State<WorkoutDetailsStatefulWidget> {
 
   getExerciseEntry() {
     return widget.sessionExercise;
+  }
+
+  String getElapsedTime() {
+    var hr = ((_start / (60 * 60)) % 60)
+                 .floor()
+                 .toString()
+                 .padLeft(2, '0');
+    var         min = ((_start / 60) % 60)
+                 .floor()
+                 .toString()
+                 .padLeft(2, '0');
+    var         sec =
+                 (_start % 60).floor().toString().padLeft(2, '0');
+
+    return "$hr:$min:$sec";
   }
 }

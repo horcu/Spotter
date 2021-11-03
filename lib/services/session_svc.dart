@@ -1,16 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:spotter/enums/part.dart';
-import 'package:spotter/models/excercise_entry.dart';
 import 'package:spotter/models/exercise.dart';
 import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/models/session.dart';
-import 'package:spotter/widgets/sessionbar.dart';
 
 class SessionSvc extends ChangeNotifier {
   final String _dbKey = 'daily_session';
@@ -19,36 +13,43 @@ class SessionSvc extends ChangeNotifier {
   final String sessionsKey = 'sessions';
   final String _selectedExercisesKey = 'selectedExercises';
   final String _activeSessionExistsKey = 'sessionStarted';
+  final String _currentSessionMillis = 'sessionMillis';
   final String _selectedPartsKey = 'selectedParts';
-  var _sessionPausedKey = 'sessionPaused';
+  final String _sessionPausedKey = 'sessionPaused';
 
   late Session _session;
   var _oldSessions = [];
   var loggedExercises = <SessionExercise>[];
   late Box<dynamic> _db ;
-  late SessionBar _bar = SessionBar();
 
+   late bool timerPaused = false;
 
+  var _timerNotStarted = true;
 
   SessionSvc(Box<dynamic> db){
     _session = Session();
     _db = db;
-    _session.exerciseEntries = <ExerciseEntry>[];
-    _bar = SessionBar();
+    _session.exerciseEntries = [];
+
+    // testing
+     //_delete(sessionsKey);
+   // end testing
 
   }
 
-  void add(ExerciseEntry exercise) {
+  bool get timerHasNotStarted => _timerNotStarted;
+
+  void add(SessionExercise exercise) {
     _session.exerciseEntries.add(exercise);
   }
 
-  void remove(ExerciseEntry exercise) {
+  void remove(SessionExercise exercise) {
     if(_session.exerciseEntries.contains(exercise)) {
       _session.exerciseEntries.remove(exercise);
     }
   }
 
-  void replace(String exerciseId, ExerciseEntry newExercise) {
+  void replace(String exerciseId, SessionExercise newExercise) {
     var ex = _session.exerciseEntries.firstWhereOrNull((element) => element.id ==
         exerciseId);
     if(ex != null) {
@@ -56,21 +57,33 @@ class SessionSvc extends ChangeNotifier {
     }
   }
 
+  void _delete(key){
+    _db.delete(key);
+  }
+
   void save(){
-   // _oldSessions.add(_session);
-   // _db.put(key, _oldSessions );
 
-    // save the session entries separate for use with detecting last time used
-    // the equipment and how much weight/distance/ whatever was used/consumed
-    _session.exerciseEntries.forEach((element) {
-      var name = element.exercise.equipment.toString();
-      _db.put(name, element.exercise);
-    });
+    // get the list of old sessions
+    var sessions = _db.containsKey(sessionsKey) ? _db.get
+      (sessionsKey).cast<Session>() : <Session>[];
 
-    // save the session separate
-    _db.put(sessionsKey, _session);
 
-    // This call tells the widgets that are listening to this model to rebuild.
+      // save the session entries separate for use with detecting last time used
+      // the equipment and how much weight/distance/ whatever was used/consumed
+     // loggedExercises.forEach((element) {
+     //   var name = element.equipment.toString();
+     //   _db.put(name, element.name);
+     // });
+
+      // save the session to the existing list
+    _session.exerciseEntries = loggedExercises;
+      sessions.add(_session);
+
+      // save the list with the new session added
+      _db.put(sessionsKey, sessions);
+
+      // This call tells the widgets that are listening to this model to
+    // rebuild.
     notifyListeners();
   }
 
@@ -209,12 +222,28 @@ class SessionSvc extends ChangeNotifier {
     super.dispose();
   }
 
-  SessionBar getSessionBar() {
-   return _bar;
+  void saveMillis(millis) {
+    _db.put(_currentSessionMillis, millis);
   }
 
-  toggleTimer(){
-    return _db.put(_sessionPausedKey, !_db.get(_sessionPausedKey, defaultValue:
-        false)) ;
+  void pauseTimer() {
+    timerPaused = true;
+  }
+
+  void unpauseTimer(){
+    timerPaused = false;
+  }
+
+  bool get isTimerPaused{
+    return timerPaused;
+  }
+
+  startTimer(){
+    _timerNotStarted = false;
+  }
+
+  List<Session> getHistoricalTimeline() {
+    var result = _db.get(sessionsKey);
+    return result?.cast<Session>() ?? <Session>[];
   }
 }

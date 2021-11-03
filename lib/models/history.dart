@@ -18,9 +18,13 @@ class History {
   var date;
   @HiveField(5)
   var equipment;
+  @HiveField(6)
+  var name;
 
-  History({this.equipment, this.date, this.distance, this.duration, this.rep, this.weight});
-  History._({this.equipment, this.date, this.distance, this.duration, this.rep, this.weight});
+  History({this.equipment, this.date, this.distance, this.duration, this.rep,
+    this.weight, this.name});
+  History._({this.equipment, this.date, this.distance, this.duration, this
+      .rep, this.weight, this.name});
 
   factory History.fromJson(Map<String, dynamic> json) {
     return History._(
@@ -30,6 +34,7 @@ class History {
         duration: json['duration'],
         date: json['date'],
         equipment: json['equipment'],
+        name: json['name'],
 
     );
   }

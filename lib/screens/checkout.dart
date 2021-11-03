@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spotter/services/session_svc.dart';
-import 'package:spotter/widgets/sessionbar.dart';
 import 'package:spotter/widgets/topbar.dart';
 
 import '../main.dart';
@@ -67,7 +66,8 @@ class _CheckoutState extends State<Checkout> {
                   .bold),),
              const Spacer(flex: 1,),
              const Text('WORKOUT TIME',
-             style: TextStyle(color: Colors.grey,fontSize: 30, fontWeight:  FontWeight
+             style: TextStyle(color: Colors.grey,   fontSize: 30, fontWeight:
+             FontWeight
             .bold),),
             Text(widget.duration,  style: const TextStyle(color: Colors.grey,fontSize: 25,
                 fontWeight:

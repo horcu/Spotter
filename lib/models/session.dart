@@ -1,17 +1,17 @@
  // You have to add this manually, for some reason it cannot be added automatically
 import 'package:hive/hive.dart';
 import 'package:spotter/enums/part.dart';
-import 'excercise_entry.dart';
+import 'package:spotter/models/session_exercise.dart';
 
 part 'session.g.dart';
 
  @HiveType(typeId: 2)
 class Session extends HiveObject{
   @HiveField(0)
-  var exerciseEntries = <ExerciseEntry>[];
+  var exerciseEntries = <SessionExercise>[];
 
   @HiveField(1)
-  late Session _lastSession;
+  dynamic _lastSession;
 
   @HiveField(2)
   List<Part> part = [];

@@ -23,13 +23,14 @@ class HistoryAdapter extends TypeAdapter<History> {
       duration: fields[3] as dynamic,
       rep: fields[1] as dynamic,
       weight: fields[0] as dynamic,
+      name: fields[6] as dynamic,
     );
   }
 
   @override
   void write(BinaryWriter writer, History obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.weight)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class HistoryAdapter extends TypeAdapter<History> {
       ..writeByte(4)
       ..write(obj.date)
       ..writeByte(5)
-      ..write(obj.equipment);
+      ..write(obj.equipment)
+      ..writeByte(6)
+      ..write(obj.name);
   }
 
   @override

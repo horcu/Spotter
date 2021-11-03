@@ -39,6 +39,8 @@ class SessionExercise {
   double lastDistance;
   @HiveField(15)
   final List<dynamic>? history;
+  @HiveField(16)
+  String equipmentUsed;
 
 
   SessionExercise(
@@ -57,6 +59,7 @@ class SessionExercise {
       this.lastDuration,
       this.distance,
       this.lastDistance,
-      this.history);
+      this.history,
+      this.equipmentUsed);
 
 }

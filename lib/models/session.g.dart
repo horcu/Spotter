@@ -17,8 +17,8 @@ class SessionAdapter extends TypeAdapter<Session> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Session()
-      ..exerciseEntries = (fields[0] as List).cast<ExerciseEntry>()
-      .._lastSession = fields[1] as Session
+      ..exerciseEntries = (fields[0] as List).cast<SessionExercise>()
+      .._lastSession = fields[1] as dynamic
       ..part = (fields[2] as List).cast<Part>()
       ..duration = fields[3] as int
       ..date = fields[4] as String;

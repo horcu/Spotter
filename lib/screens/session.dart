@@ -77,7 +77,7 @@ class _WorkoutSessionState extends State<WorkoutSession> {
       },
     ),
 
-   bottomSheet: widget.svc.getSessionBar()
+   //bottomSheet: widget.svc.getSessionBar()
         // This trailing comma makes auto-formatting nicer for build methods.
       );
   }
@@ -109,12 +109,10 @@ class _WorkoutSessionState extends State<WorkoutSession> {
         0,
         0,
         0,
-        history);
+        history,'');
 
     // pass in the last exercise similar to this new one
     // changes will then be made to it to save the next
     return WorkoutDetailsStatefulWidget(exercise.name, widget.svc, sessionExercise);
   }
-
-
 }
