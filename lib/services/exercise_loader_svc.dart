@@ -7,7 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:spotter/models/equipment.dart';
 import 'package:spotter/models/exercise.dart';
 import 'package:spotter/models/part.dart';
-import 'package:spotter/models/recommendation.dart';
+import 'package:spotter/models/schedule.dart';
 import 'package:uuid/uuid.dart';
 
 class ExerciseLoader extends ChangeNotifier {
@@ -29,20 +29,17 @@ class ExerciseLoader extends ChangeNotifier {
   var parts;
   var equipment;
 
-
-
-
   ExerciseLoader(Box<dynamic> db){
     _db = db;
   }
 
-  seedDb() async {
+  Future seedDb() async {
     try {
-      deleteAllFromDb();
-      loadExercisesFromJson();
-      loadRecommendationsFromJson();
-      loadPartsFromJson();
-      loadEquipmentFromJson();
+     // deleteAllFromDb();
+      await loadRecommendationsFromJson();
+      await loadExercisesFromJson();
+      await loadPartsFromJson();
+      await loadEquipmentFromJson();
 
     } catch (e) {
       print(e);
@@ -111,7 +108,8 @@ class ExerciseLoader extends ChangeNotifier {
 
   Future getRecommendationsFromJsonList() async {
     final String response = await rootBundle.loadString('_json/schedule.json');
-    return await json.decode(response)["schedule"].map((data) => Recommendation.fromJson(data))
+    return await json.decode(response)["schedule"].map((data) => Schedule
+        .fromJson(data))
         .toList();
   }
 
@@ -122,7 +120,7 @@ class ExerciseLoader extends ChangeNotifier {
   }
 
   Future getPartsFromJsonList() async {
-    final String response = await rootBundle.loadString('_json/equipment.json');
+    final String response = await rootBundle.loadString('_json/parts.json');
     return await json.decode(response)["parts"].map((data) => Part.fromJson(data))
         .toList();
   }

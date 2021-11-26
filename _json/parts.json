@@ -1,6 +1,12 @@
 {
   "parts": [
     {
+      "id": "7",
+      "name": "chest",
+      "icon": "chest",
+      "color": "#888888"
+    },
+    {
       "id": "0",
       "name": "arm",
       "icon": "arm",
@@ -42,8 +48,9 @@
       "icon": "shoulder",
       "color": "#888888"
     },
+
     {
-      "id": "7",
+      "id": "8",
       "name": "none",
       "icon": "none",
       "color": "#888888"

@@ -26,6 +26,7 @@ class _partState extends State<Parts> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      backgroundColor: Colors.blueGrey,
       appBar: TopBar(
         onTitleTapped: () {
         },
@@ -47,7 +48,9 @@ class _partState extends State<Parts> {
             var selected = widget.svc.parts[index];
             var isSelected = widget.allPartIds.contains(selected.name);
             return Card(
+                color: Colors.blueGrey,
                 child: ListTile(
+                    textColor: Colors.white,
                     onTap: () {
                       setState(() {
 
@@ -63,27 +66,29 @@ class _partState extends State<Parts> {
                       });
                     },
                     title: Text(selected.name, style: TextStyle(fontSize:
-                    isSelected ? 26 : 24),),
+                    isSelected ? 20 : 18),),
                     subtitle: const Text(''),
                     leading:
                     isSelected
                         ? const Icon(
                       Icons.check,
                       color: Colors.green,
-                      size: 24.0,
+                      size: 20.0,
                       semanticLabel:
                       'Text to announce in accessibility modes',
                     )
                         : const Icon(
                       Icons.add,
                       color: Colors.orange,
-                      size: 24.0,
+                      size: 20.0,
                       semanticLabel:
                       'Text to announce in accessibility modes',
                     ),
                     trailing: const Text("")));
           }),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.blueGrey,
       onPressed: startWorkout,
       tooltip: 'Start Session',
       child: const Icon(Icons.arrow_right_alt),

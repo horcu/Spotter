@@ -34,6 +34,7 @@ class _CheckoutState extends State<Checkout> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      backgroundColor: Colors.blueGrey,
       appBar: TopBar(
         title: widget.title,
         // Here we take the value from the MyHomePage object that was created by

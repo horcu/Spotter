@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:hive/hive.dart';
@@ -7,9 +10,10 @@ import 'package:spotter/models/exercise.dart';
 import 'package:spotter/models/part.dart';
 import 'package:spotter/models/session_exercise.dart';
 import 'package:spotter/models/session.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class SessionSvc extends ChangeNotifier {
-  final String _dbPartRecommendationKey = 'recommendations';
+  final String _dbPartRecommendationKey = 'schedule';
   final String _dbExercisesKey = 'exercises';
   final String sessionsKey = 'sessions';
   final String _selectedExercisesKey = 'selectedExercises';
@@ -21,13 +25,31 @@ class SessionSvc extends ChangeNotifier {
   final String _dbEquipmentKey = 'equipment';
 
   late Session _session;
-  var _oldSessions = [];
   var loggedExercises = <SessionExercise>[];
   late Box<dynamic> _db ;
 
    late bool timerPaused = false;
 
   var _timerNotStarted = true;
+
+  var _start = 0;
+  static Timer? _timer;
+
+  late LinkedHashMap<DateTime, List<Event>> kEvents;
+
+  /// Example events.
+  ///
+  /// Using a [LinkedHashMap] is highly recommended if you decide to use a map.
+
+
+   Event getEventData(item, index) {
+    // var rec = getRecommendedWorkoutPartForTheDay();
+     var dayInt = index == 0 ? kFirstDay.weekday :
+     kFirstDay.weekday + index;
+     var recsByDay = getRecommendedWorkoutPartForTheDay(dayInt);
+
+    return Event(recsByDay [index].name, "");
+  }
 
   SessionSvc(Box<dynamic> db){
     _session = Session();
@@ -38,9 +60,28 @@ class SessionSvc extends ChangeNotifier {
      //_delete(sessionsKey);
    // end testing
 
+    if(timerHasNotStarted) {
+     _start = 0 ;
+    }
+
+    int allyear = 365;
+    final _kEventSource = {
+
+      for (var item in List.generate(allyear, (index) => index))
+        DateTime.utc(kFirstDay.year, kFirstDay.month, item)
+            : List.generate(getNumberOfExercises(item), (index) => getEventData(item, index))
+    };
+
+    kEvents = LinkedHashMap<DateTime, List<Event>>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    )..addAll(_kEventSource);
+
+
   }
 
   bool get timerHasNotStarted => _timerNotStarted;
+  get start => this.getSessionTime();
 
   void add(SessionExercise exercise) {
     _session.exercises.add(exercise);
@@ -51,6 +92,8 @@ class SessionSvc extends ChangeNotifier {
       _session.exercises.remove(exercise);
     }
   }
+
+
 
   void replace(String exerciseId, SessionExercise newExercise) {
     var ex = _session.exercises.firstWhereOrNull((element) => element.id ==
@@ -94,22 +137,22 @@ class SessionSvc extends ChangeNotifier {
     return _db.containsKey(key) ? await _db.get(key) : [];
   }
 
-  getRecommendedWorkoutPartForTheDay() {
+  List<Part> getRecommendedWorkoutPartForTheDay(dayInteger) {
     var allRec = _db.containsKey(_dbPartRecommendationKey)
         ? _db.get(_dbPartRecommendationKey)
         : [];
 
     List recs = allRec?.toList();
-    var day = getStringDayByDayId(DateTime.now().weekday);
+    var day = getStringDayByDayId(dayInteger);
     var rec = recs
         .firstWhereOrNull((r) => r.day == day);
 
     var workout = rec?.workout;
-    List<PartEnum> partList = [];
+    List<Part> partList = [];
     var woList = workout?.toList() ?? [];
     var l = [];
-    for(var i = 0; i< PartEnum.values.length; i++) {
-      var p = PartEnum.values[i];
+    for(var i = 0; i < parts.length; i++) {
+      var p = parts[i];
       var n = p.name;
       if(woList.contains(n.toLowerCase())){
         partList.add(p);
@@ -118,7 +161,7 @@ class SessionSvc extends ChangeNotifier {
      return partList; // Part.values.firstWhere((e) => e.name == rec.);
   }
 
-  getStringDayByDayId(id){
+  static getStringDayByDayId(id){
 
     switch(id) {
       case 7:
@@ -222,6 +265,7 @@ class SessionSvc extends ChangeNotifier {
   @override
   void dispose() {
     checkOut();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -229,20 +273,40 @@ class SessionSvc extends ChangeNotifier {
     _db.put(_currentSessionMillis, millis);
   }
 
-  void pauseTimer() {
-    timerPaused = true;
+  void startTimer(int timerDuration) {
+
+    _timer?.cancel();
+
+      _start = timerDuration;
+
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+          (Timer timer) => {
+          if (_start < 0) {
+            timer.cancel()
+          } else {
+            if(timerPaused == false) {
+              _start = _start + 1
+            }else {
+              //paused//
+            }
+          }
+        },
+
+    );
+    _timerNotStarted = false;
   }
 
-  void unpauseTimer(){
-    timerPaused = false;
+  void pauseTimer() {
+    _timer?.cancel();
+
   }
+
+  void unpauseTimer() => startTimer(_start);
 
   bool get isTimerPaused{
     return timerPaused;
-  }
-
-  startTimer(){
-    _timerNotStarted = false;
   }
 
   List<Session> getHistoricalTimeline() {
@@ -251,10 +315,10 @@ class SessionSvc extends ChangeNotifier {
   }
 
   List<Part> get parts{
-    return _db.get(_dbPartsKey) ?? <Part>[];
+    return _db.get(_dbPartsKey).cast<Part>() ?? <Part>[];
   }
   List<Equipment> get  equipment{
-    return _db.get(_dbEquipmentKey) ?? <Equipment>[];
+    return _db.get(_dbEquipmentKey).cast<Equipment>() ?? <Equipment>[];
   }
 
   getPartIcon(String partName) {
@@ -264,4 +328,47 @@ class SessionSvc extends ChangeNotifier {
   getEquipmentIcon(String ename) {
     return equipment.firstWhere((element) => element.name == ename);
   }
+
+  getSessionTime() {
+    return _start;
+  }
+
+  static int getHashCode(DateTime key) {
+    return key.day * 1000000 + key.month * 10000 + key.year;
+  }
 }
+
+  // ..addAll({
+  //   kToday: [
+  //     const Event('Back', 'Sunday'),
+  //     const Event('Shoulders', 'Sunday'),
+  //   ],
+  //});
+
+  int getNumberOfExercises(int item) {
+    return 2;
+}
+
+/// Example event class.
+class Event {
+  final String title;
+  final String day;
+
+  const Event(this.title, this.day);
+
+  @override
+  String toString() => title;
+}
+
+/// Returns a list of [DateTime] objects from [first] to [last], inclusive.
+List<DateTime> daysInRange(DateTime first, DateTime last) {
+  final dayCount = last.difference(first).inDays + 1;
+  return List.generate(
+    dayCount,
+        (index) => DateTime.utc(first.year, first.month, first.day + index),
+  );
+}
+
+final kToday = DateTime.now();
+final kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
+final kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);

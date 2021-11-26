@@ -1,30 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'recommendation.dart';
+part of 'schedule.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class RecommendationAdapter extends TypeAdapter<Recommendation> {
+class ScheduleAdapter extends TypeAdapter<Schedule> {
   @override
   final int typeId = 7;
 
   @override
-  Recommendation read(BinaryReader reader) {
+  Schedule read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Recommendation(
+    return Schedule(
       id: fields[0] as String,
       day: fields[1] as String,
-      workout: (fields[2] as List).cast<dynamic>(),
+      workout: fields[2] as dynamic,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Recommendation obj) {
+  void write(BinaryWriter writer, Schedule obj) {
     writer
       ..writeByte(3)
       ..writeByte(0)
@@ -41,7 +41,7 @@ class RecommendationAdapter extends TypeAdapter<Recommendation> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RecommendationAdapter &&
+      other is ScheduleAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

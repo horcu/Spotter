@@ -32,6 +32,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
               Hero(
                 tag: 'topBarBtn',
                 child: Card(
+                  color: Colors.white,
                   elevation: 10,
                   shape: kBackButtonShape,
                   child: MaterialButton(
@@ -51,6 +52,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                 tag: 'title',
                 transitionOnUserGestures: true,
                 child: Card(
+                  color: Colors.blueGrey,
                   elevation: 10,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
@@ -73,7 +75,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 25,
-                                  // color: Colors.black54,
+                                   color: Colors.white,
                                 ),
                               ),
                             ],

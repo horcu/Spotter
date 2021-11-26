@@ -23,6 +23,7 @@ class _State extends State<HistoryTimeline> {
     List<Session> sessions = widget.svc.getHistoricalTimeline();
 
     return Scaffold(
+      backgroundColor: Colors.blueGrey,
       appBar: TopBar(
         onTitleTapped: () {},
         title: 'History',
